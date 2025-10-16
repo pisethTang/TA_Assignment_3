@@ -1,0 +1,7 @@
+{
+  "python.analysis.extraPaths": ["${workspaceFolder}/final/code"],
+  "python.autoComplete.extraPaths": ["${workspaceFolder}/final/code"],
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportMissingModuleSource": "none"
+  }
+}
