@@ -32,8 +32,8 @@ def main():
 
     for algorithm in config.ALGORITHMS:
         print(f"=========== Running experiments for algorithm: {algorithm.name} ========== ")
-        # start time 
-        start_time = time.process_time()
+        # start time - use perf_counter for accurate wall-clock time measurement
+        start_time = time.perf_counter()
         # create a new experiment for the current algorithm 
         experiment = ioh.Experiment(
             algorithm=algorithm,
@@ -53,10 +53,10 @@ def main():
 
 
         experiment.run()
-        end_time = time.process_time()
+        end_time = time.perf_counter()
         elapsed = end_time - start_time
         elapsed_times.append(elapsed)
-        print(f"Elapsed time for algorithm {algorithm.name}: {elapsed:.2f} seconds after {config.REPETITIONS} runs on {len(config.PROBLEM_IDS)} problems.")
+        print(f"Elapsed time for algorithm {algorithm.name}: {elapsed:.2f} seconds ({elapsed/60:.2f} minutes) after {config.REPETITIONS} runs on {len(config.PROBLEM_IDS)} problems.")
         print(f"=========== Completed experiments for algorithm: {algorithm.name} ========== ")
     print("All experiments completed.")
     print(f"Results are saved in the '{out_base}' directory.")
