@@ -1,0 +1,21 @@
+final/doc/data
+
+# Python cache files and directories
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+
+
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# virtual environment directories
+.venv/
+
+# macOS system files
+.DS_Store
+
+
