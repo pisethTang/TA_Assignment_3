@@ -1,9 +1,13 @@
 \documentclass[a4paper, 11pt]{article}
 \usepackage[margin=2cm]{geometry}
-\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{amsmath, amssymb, amsfonts, xcolor}
 \usepackage{hyperref}
+\usepackage[backend=biber,style=authoryear]{biblatex}
+\addbibresource{refs.bib}
+
 \hypersetup{
     colorlinks=true,
+    citecolor=teal,
     linkcolor=blue,
     urlcolor=magenta,
 }
@@ -88,13 +92,25 @@
         \begin{quote}
             Specific sets of solutions are the so-called \emph{Pareto set approximations}, which are solution sets of pairwisely non-dominated solutions.
         \end{quote}
-\section{Contents}  
+\section{Deteriorative Cycles}  
     \begin{quote}
         In single-objective optimization, every solution is mapped to a real value and solutions can always be pairwisely compared via the less or equal 
         relation $\leq$ on $\R$. In another words, the total order (any elements are comparable) $\leq\subseteq\R\times\R$ induces via $f$ order on the 
         search space $X$ that is a total preorder. In a multiobjective scenario, the $\le$ relation is generalized to objective vectors, i.e., $\le$ is 
-        a subset of $\mathbb{R}^k \times \mathbb{R}^k$. Here, the totality is not given due to vectors $a, b \in \mathbb{R}^k$ where $f_1(a) < f_1(b)$ 
+        a subset of $\R^k\times\R^k$. Here, the totality is not given due to vectors $a, b \in \R^k$ where $f_1(a) < f_1(b)$ 
         but $f_2(a) > f_2(b)$—the relation $\le$ on the set of objective vectors is only a partial order, i.e., reflexive, antisymmetric, and transitive. 
-        This means that \emph{not any elements are comparable}.
+        This means that \emph{not any elements are comparable}. \fbox{\cite{brockhoff2009theoretical}}
     \end{quote}
+\subsection{Downfall of The Evolutionary Algorithm Multiobjective Optimisation}
+    \begin{quote}
+        Among the well-established ones, NSGA-II [Deb et al., 2002] and SPEA2 [Zitzler et al., 2002] have to be mentioned here. Both use the Pareto dominance 
+        concept as the main selection criterion in an elitist manner where non-dominated solutions are favored over dominated ones. In addition, a second selection 
+        criterion establishes diversity among the solutions. However, experimental studies have shown that both algorithms do not scale well if the number 
+        of objectives increases and that a cyclic behavior can be observed. This means that—although non-dominated solutions are preferred over dominated 
+        ones—over time, previously dominated solutions enter the population again, resulting in an oscillating distance to the Pareto front.
+        \fbox{\cite{brockhoff2009theoretical}}
+    \end{quote}
+
+\newpage
+\printbibliography
 \end{document}
