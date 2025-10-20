@@ -1,0 +1,100 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=magenta,
+}
+\newcommand{\R}{{\rm I\!R}}
+
+\begin{document}
+\section{Prerequisites}
+\subsection{Ordered Set}
+\paragraph{Partial Ordered Set}
+    \begin{quote}
+        Formally, a partial order is a \textbf{homogeneous binary relation} that is \textbf{reflexive}, \textbf{antisymmetric}, and \textbf{transitive}. 
+        A \textbf{partially ordered set} (\textit{poset} for short) is an \textit{ordered pair} $P = (X, \le)$ consisting of a set $X$ (called the 
+        \textit{ground set} of $P$) and a partial order $\le$ on $X$. When the meaning is clear from context and there is no ambiguity about the partial 
+        order, the set $X$ itself is sometimes called a poset.
+
+        A \textbf{reflexive, weak,} or \textbf{non-strict partial order}, commonly referred to simply as a \textbf{partial order}, is a \textbf{homogeneous relation} $\le$ on a set $P$ that is \textbf{reflexive}, \textbf{antisymmetric}, and \textbf{transitive}. That is, for all $a, b, c \in P$, it must satisfy:
+        \begin{enumerate}
+            \item \textbf{Reflexivity:} $a \le a$, i.e. every element is related to itself.
+            \item \textbf{Antisymmetry:} if $a \le b$ and $b \le a$ then $a = b$, i.e. no two distinct elements precede each other.
+            \item \textbf{Transitivity:} if $a \le b$ and $b \le c$ then $a \le c$.
+        \end{enumerate}
+        A non-strict partial order is also known as an \textbf{antisymmetric preorder}.
+    \end{quote}
+\paragraph{Total Order}
+    \begin{quote}
+        In mathematics, a total order or linear order is a partial order \emph{\textbf{in which any two elements are comparable}}. That 
+        is, a total order is a binary relation $\le$ on some set $X$, which satisfies the following for all $a, b$ and $c$ in $X$:
+        \begin{enumerate}
+            \item $a \le a$ (\textit{reflexive}).
+            \item If $a \le b$ and $b \le c$ then $a \le c$ (\textit{transitive}).
+            \item If $a \le b$ and $b \le a$ then $a = b$ (\textit{antisymmetric}).
+            \item $a \le b$ or $b \le a$ (\textit{strongly connected}, formerly called \textit{totality}).
+        \end{enumerate}
+    \end{quote}
+\subsection{Cartesian Product}
+    \begin{quote}
+        In \textbf{mathematics}, specifically \textbf{set theory}, the \textbf{Cartesian product} of two sets $A$ and $B$, denoted $A \times B$, is the set 
+        of all \textbf{ordered pairs} $(a, b)$ where $a$ is an element of $A$ and $b$ is an element of $B$. In terms of \textbf{set-builder notation}, that is
+        \[
+            A \times B = \{(a, b) \mid a \in A \ \text{and} \ b \in B\}.
+        \]
+    \end{quote}
+    \paragraph{Orders on the Cartesian product of totally ordered sets}
+        \begin{quote}
+            There are several ways to take two totally ordered sets and extend to an order on the \textbf{Cartesian product}, though the resulting order may 
+            only be \textbf{partial}. Here are three of these possible orders, listed such that each order is stronger than the next:
+            \begin{itemize}
+                \item \textbf{Lexicographical order:} $(a,b) \le (c,d)$ if and only if $a < c$ or $(a = c \text{ and } b \le d)$. This is a total order.
+                \item $(a,b) \le (c,d)$ if and only if $a \le c$ and $b \le d$ (the \textbf{product order}). This is a partial order.
+                \item $(a,b) \le (c,d)$ if and only if $(a < c \text{ and } b < d)$ or $(a = c \text{ and } b = d)$ (the reflexive closure of the \textbf{direct product} of the corresponding strict total orders). This is also a partial order.
+            \end{itemize}
+        \end{quote}
+    \paragraph{Relations as Subsets of Cartesian Products}\href{https://math.stackexchange.com/questions/2454926/relations-cartesian-product-explanation}{Mathematics Exchange}
+        \begin{quote}
+            The set of ordered pairs drawn from the Cartesian product can be defined as
+            \begin{equation*}
+                R = \left\{(x,y)\in A\times B|\;xRy\right\}
+            \end{equation*}
+            Thus we can say
+            \begin{equation*}
+                R\subseteq A\times B
+            \end{equation*}
+        \end{quote}
+\subsection{Pareto Set}
+    \begin{quote}
+        We assume w.l.o.g that $k$ objective functions,
+        \begin{equation*}
+            \begin{aligned}
+                f_i&:X^k\rightarrow\R\\
+                f(x) &= \bigl(f_1(x),f_2(x),\ldots,f_k(x)\bigr)\in\R^k,\quad\text{where }\mathbf{x}\in X^k
+            \end{aligned} 
+        \end{equation*}
+        A solution $x\in X$  is said to \emph{dominate} another solution $y\in X$ iff $\forall\;1\leq i\leq k:f_i(x)\leq f_i(y)$ and $\exists\;1\leq i\leq k:f_i(x)<f_i(y)$. This can denoted as
+        $x\prec y$. A solution $x\in X$ \emph{weakly dominates} a solution $y\in X$ iff $\forall\;1\leq i\leq k:f_i(x)\leq f_i(y)$. This can be denoted as
+        $x\preceq y$.
+    \end{quote}
+    \paragraph{Parento Optimal}
+        \begin{quote}
+            A solution $x^*\in X$ is then called \emph{Parento Optimal} iff there is no other solution in $X$ that dominates $x^*$. 
+        \end{quote}
+    \paragraph{Pareto set approximations}
+        \begin{quote}
+            Specific sets of solutions are the so-called \emph{Pareto set approximations}, which are solution sets of pairwisely non-dominated solutions.
+        \end{quote}
+\section{Contents}  
+    \begin{quote}
+        In single-objective optimization, every solution is mapped to a real value and solutions can always be pairwisely compared via the less or equal 
+        relation $\leq$ on $\R$. In another words, the total order (any elements are comparable) $\leq\subseteq\R\times\R$ induces via $f$ order on the 
+        search space $X$ that is a total preorder. In a multiobjective scenario, the $\le$ relation is generalized to objective vectors, i.e., $\le$ is 
+        a subset of $\mathbb{R}^k \times \mathbb{R}^k$. Here, the totality is not given due to vectors $a, b \in \mathbb{R}^k$ where $f_1(a) < f_1(b)$ 
+        but $f_2(a) > f_2(b)$—the relation $\le$ on the set of objective vectors is only a partial order, i.e., reflexive, antisymmetric, and transitive. 
+        This means that \emph{not any elements are comparable}.
+    \end{quote}
+\end{document}
