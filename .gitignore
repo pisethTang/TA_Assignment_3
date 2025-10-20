@@ -19,4 +19,6 @@ __pycache__/
 # macOS system files
 .DS_Store
 
-
+# LaTeX documentation
+*.synctex.gz
+*.bbl*
