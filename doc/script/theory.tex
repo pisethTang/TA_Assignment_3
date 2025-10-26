@@ -1,11 +1,18 @@
 \documentclass[a4paper, 11pt]{report}
 \usepackage[margin=2cm]{geometry}
-\usepackage{amsmath, amssymb, amsfonts, xcolor, mathtools}
+\usepackage{amsmath, amssymb, amsfonts, xcolor, mathtools, amsthm}
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
-\usepackage[backend=biber,style=authoryear]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \addbibresource{refs.bib}
+\DefineBibliographyStrings{english}{bibliography={References}}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
 
 \hypersetup{
     colorlinks=true,
@@ -315,6 +322,14 @@
             \end{enumerate}
         }
     }
+\section{Global-SEMO}
+    \begin{quote}
+        The use of one-bit mutations is attractive for theoretical investigations as its analysis is often easier compared to other mutation operators. It
+        is, however, only a \emph{local search operator} flipping one bit at a time and therefore does not guarantee a finite running time for all pseudo-Boolean
+        functions. On the contrary, the independent-bit mutation operator, which flips each bit independently with a certain probability, can be called a 
+        \emph{global search} operator since it can produce any point in the decision space with positive probability.\\
+        \cite{laumanns2004running}.
+    \end{quote}
     \begin{algorithm}[H]
         \caption{GSEMO (concise)}
         \KwIn{Objective $g:\{0,1\}^n \to \mathbb{R}^m$}
@@ -331,6 +346,103 @@
         }
         \Return{$P$}
     \end{algorithm}
+\subsection{Knapsack Problem on GSEMO \cite{laumanns2004running}}
+\begin{quote}
+The optimization problem considered in this study is a special instance of the multiobjective knapsack problem. Given is a set of $n$ items, each 
+of which has $m$ profit and $k$ weight values associated with it. The goal is to select a subset of items such that the sums over each of their 
+$k$-th weight values do not exceed given bounds and the sums over each of their $m$-th profit values are maximized.
+\end{quote}
+
+\begin{definition}[MOKP]
+Let $X=\{0,1\}^n$ be the decision space and $n\in\mathbb{N}$. The Multiobjective Knapsack Problem (MOKP) is
+\[
+\text{maximize}\quad f(x)=\bigl(f_1(x),f_2(x)\bigr)
+\qquad
+\text{subject to}\quad g(x)\le \tfrac{n}{2},
+\]
+with
+\[
+f_1(x)=\sum_{i=1}^{n}2^{\,n-i}x_i,\qquad
+f_2(x)=\sum_{i=1}^{n}2^{\,i-1}x_i,\qquad
+g(x)=\sum_{i=1}^{n}x_i,\qquad
+x=(x_1,\ldots,x_n)\in X^n.
+\]
+\end{definition}
+
+\paragraph{Pareto set size and structure.}
+The MOKP function is a bijection, so none of the $|X|=\Theta(2^n)$ decision vectors maps to the same objective vector. 
+The Pareto set contains $|X^*|=n^2/4+1$ elements and has the form below.
+
+\begin{proposition}\label{prop:type-forms}
+A decision vector $x\in X$ is Pareto-optimal in the MOKP problem if and only if it has the form
+\[
+\underbrace{(1,1,\ldots,1}_{a},
+\underbrace{0,0,\ldots,0}_{n/2},
+\underbrace{1,1,\ldots,1)}_{n/2-a}
+\qquad\text{(Type 1)}
+\]
+or
+\[
+\Bigl(
+\underbrace{1,1,\ldots,1}_{b},
+\underbrace{0,0,\ldots,0}_{c},
+1,
+\underbrace{0,0,\ldots,0}_{\tfrac{n}{2}-c},
+\underbrace{1,1,\ldots,1}_{\tfrac{n}{2}-b-1}
+\Bigr),\qquad\text{(Type 2)}
+\]
+where $a\in\{0,1,\ldots,n/2\}$, $b\in\{0,1,\ldots,n/2-1\}$, and $c\in\{1,\ldots,n/2-1\}$.
+\end{proposition}
+
+\begin{proof}[Informal proof sketch]
+Firstly only the decision vector with size $\leq 1/2$ can be inside the Pareto-optimal set. Thus there exists a vector with 
+$p,q\in\{2,3,\ldots,n\}$ where $p>q$ such that $x_p=x_q=1$ and $x_{p-1}=x_{q+1}=0$. By inverting those bits, for the first objective function we have the gain 
+$2^{n-p}-2^{n-q-1}>0$, and for the second objective function we have the gain $2^{q-1}-2^{p-2}>0$. As the first objective favors small indices and the second 
+favors large indices, maximizing one requires compensating in the other; hence the one-bit is pushed toward both sides.
+\end{proof}
+
+\paragraph{Supported solutions.}
+Only the $n/2+1$ Pareto-optimal decision vectors of the first type are `supported' solutions. A solution is supported if there exists a weight 
+combination such that it maximizes the weighted sum $\sum_{i=1}^{m}w_i f_i(x)$ (a single-objective surrogate).
+
+\begin{proposition}\label{prop:supported}
+Let $\Phi(x)\overset{\text{def}}{=}w f_1(x)+(1-w)f_2(x)$, where $w\in[0,1]$. 
+For each Pareto-optimal decision vector $x''$ of Type~2 and each $w\in[0,1]$, there exists some Pareto-optimal vector $x'$ of Type~1 such that 
+$\Phi(x')>\Phi(x'')$.
+\end{proposition}
+
+\begin{proof}
+Let w.l.o.g.\ $x''$ be a Pareto-optimal vector of Type~2, where the bit with index $b+c+1$ is set to one. Let $x',x'''$ be defined as the two vectors 
+identical with $x''$ at $n-2$ positions, where only this one-bit is moved to position $b+1$ and $n/2+b+1$, respectively. Clearly, these $x',x'''$ belong to 
+Type~1. We show that $(\Phi(x')+\Phi(x'''))/2>\Phi(x'')$, which implies that at least one of $\Phi(x')$ and $\Phi(x''')$ is larger than $\Phi(x'')$:
+\[
+(\Phi(x')+\Phi(x'''))/2>\Phi(x'')
+\]
+\[
+\Leftrightarrow\;
+w\!\left(2^{\,n-b-2}+2^{\,n-n/2-b-2}\right)
++(1-w)\!\left(2^{\,b-1}+2^{\,n/2+b-1}\right)
+>
+w\,2^{\,n-b-c-1}+(1-w)\,2^{\,b+c}
+\]
+\[
+\Leftrightarrow\;
+w\!\left(2^{-1}+2^{-n/2-1}\right)
++(1-w)\!\left(2^{-1}+2^{\,n/2-1}\right)
+>
+w\,2^{-c}+(1-w)\,2^{\,c}.
+\]
+The last inequality holds for $1\le c\le n/2-1$, which covers all possible Type~2 vectors by Proposition~\ref{prop:type-forms}. \qedhere
+\end{proof}
+\begin{remark}[On the choice of $x'$ and $x'''$]
+    I am considering why the author uses the first 0 bit in the middle section for Type~1 (in \(x'\)) and the last 0 bit before the right section of 1s (in \(x'''\)). 
+    I am guessing that this is because these positions produce the smallest possible maximization for one objective while minimizing the gain in the other. 
+    On the left block of 1s, the outermost position yields the least value for \(f_1\) (due to exponential decay), so moving the isolated 1 to the start of the middle 0s 
+    (for \(x'\)) provides only a modest boost to \(f_1\) but significantly reduces \(f_2\). Similarly, for \(x'''\), moving it to the end of the middle 0s (just before the 
+    right 1s) modestly boosts \(f_2\) but greatly penalizes \(f_1\). The logic is symmetric for the second objective. These are the “minimal improvement’’ moves closest to \(x''\); 
+    if \((\Phi(x')+\Phi(x'''))/2>\Phi(x'')\) already holds here, it holds for any farther move (which improves even more), confirming that no Type~2 vector can be supported.
+\end{remark}
+
 
 \newpage
 \printbibliography
