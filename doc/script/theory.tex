@@ -1,6 +1,8 @@
-\documentclass[a4paper, 11pt]{article}
+\documentclass[a4paper, 11pt]{report}
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath, amssymb, amsfonts, xcolor, mathtools}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage[backend=biber,style=authoryear]{biblatex}
 \addbibresource{refs.bib}
@@ -14,6 +16,7 @@
 \newcommand{\R}{{\rm I\!R}}
 
 \begin{document}
+\chapter{Evolutionary Multiobjective Optimisation}
 \section{Motivations}
     \begin{quote}
         \begin{itemize}
@@ -246,6 +249,88 @@
         \end{equation*}
         This means the objective value with the corresponding reference point.
     \end{quote}
+\chapter{Submodular function}
+    \begin{minipage}{0.45\linewidth}
+        \begin{algorithm}[H]
+            \caption{Generalized Cost-benefit Algorithm}
+            \KwData{$B > 0$}
+            \KwResult{Selection $S \subseteq V$}
+            $v^* := \arg\max \{ f(v) \mid v \in V, \hat{c}(v) \leq B \}$\;
+            $G := \emptyset$\;
+            $V' := V$\;
+
+            \While{$V' \neq \emptyset$}{
+                \ForEach{$X \in V$}{
+                    $\Delta^X_f := f(G \cup X) - f(G)$\;
+                    $\Delta^X_c := \hat{c}(G \cup X) - \hat{c}(G)$\;
+                }
+                $X^* = \arg\max \left\{ \Delta^X_f/\Delta^X_c \mid X \in V' \right\}$\;
+                
+                \If{$\hat{c}(G \cup X^*) \leq B$}{
+                    $G := G \cup X^*$\;
+                }
+                $V' := V' \setminus X^*$\;
+            }
+            \Return{$\arg\max_{S \in \{v^*, G\}} f(S)$}\;
+        \end{algorithm}
+    \end{minipage}
+    \begin{minipage}{0.45\linewidth}
+        \begin{algorithm}[H]
+            \caption{Generalized Greedy Algorithm}
+            \KwIn{Initial budget constraint $B$}
+            \KwOut{Selection $S \subseteq V$}
+
+            $X \leftarrow \emptyset$\;
+            $V' \leftarrow V$\;
+
+            \Repeat{$V' = \emptyset$}{
+                $v^* \leftarrow \arg\max_{v \in V'} \frac{f(X \cup v) - f(X)}{\hat{c}(X \cup v) - \hat{c}(X)}$\;
+                
+                \If{$\hat{c}(X \cup v^*) \le B$}{
+                    $X \leftarrow X \cup v^*$\;
+                }
+                $V' \leftarrow V' \setminus \{v^*\}$\;
+            }
+
+            $v^* \leftarrow \arg\max_{v \in V, \, \hat{c}(v) \le B} f(v)$\;
+            \Return{$\arg\max_{S \in \{X, \{v^*\}\}} f(S)$}\;
+            \vspace{4.2em}
+        \end{algorithm} 
+    \end{minipage}\\[1em]
+    \noindent
+    \framebox[\textwidth][l]{
+        \parbox{0.97\textwidth}{
+            \textbf{Approximate Local Search Procedure B:}
+
+            \medskip
+            \textbf{Input:} Ground set \( X \) of elements and value oracle access to submodular function \( f \).
+
+            \begin{enumerate}
+                \item Let \(\{v\}\) be a singleton set with the maximum value \( f(\{v\}) \) and let \( S = \{v\} \).
+                \item While there exists the following delete or exchange local operation that increases the value of \( f(S) \) by a factor of at least \( 1 + \frac{\epsilon}{n^4} \), then apply the local operation and update \( S \) accordingly.
+                \begin{itemize}
+                    \item \textbf{Delete operation on \(S\).} If \( e \in S \) such that \( f(S \setminus \{e\}) \ge (1 + \frac{\epsilon}{n^4}) f(S) \), then \( S \leftarrow S \setminus \{e\} \).
+                    \item \textbf{Exchange operation on \(S\).} If \( d \in X \setminus S \) and \( e_i \in S \cup \{\phi\} \) (for \( 1 \le i \le k \)) are such that \((S \setminus \{e_1, \ldots, e_k\}) \cup \{d\} \in \mathcal{I}_i\) for all \( i \in [k] \) and \( f((S \setminus \{e_1, \ldots, e_k\}) \cup \{d\}) > (1 + \frac{\epsilon}{n^4}) f(S) \), then \( S \leftarrow (S \setminus \{e_1, \ldots, e_k\}) \cup \{d\} \).
+                \end{itemize}
+            \end{enumerate}
+        }
+    }
+    \begin{algorithm}[H]
+        \caption{GSEMO (concise)}
+        \KwIn{Objective $g:\{0,1\}^n \to \mathbb{R}^m$}
+        \KwOut{Pareto set $P$}
+        $x \sim \mathrm{Unif}(\{0,1\}^n)$\;
+        $P \gets \{x\}$\;
+        \Repeat{stop}{
+            pick $x \in P$ u.a.r.\tcp*{uniformly at random}
+            $x' \gets \mathrm{flip}_{1/n}(x_i)\;\forall\,i$ \tcp*{flip each bit independently w.p.\ $1/n$}
+            compute $g(x')$\;
+            \If{$\nexists\, y\in P:\; g(y)\prec g(x')$}{
+                $P \gets (P \cup \{x'\}) \setminus \{y\in P:\; g(y)\preceq g(x')\}$\;
+            }
+        }
+        \Return{$P$}
+    \end{algorithm}
 
 \newpage
 \printbibliography
