@@ -10,6 +10,6 @@ class Algorithm:
         self.budget = budget
         self.algorithm_info = algorithm_info
 
-    def __call__(self, problem: ioh.problem.PBO) -> None:
+    def __call__(self, problem: ioh.problem.GraphProblem) -> None:
         # This method should be overridden by subclasses to implement specific algorithm logic.
         raise NotImplementedError(f"This method should be overridden by subclasses's __call__() method with the given problem: {problem}.")
