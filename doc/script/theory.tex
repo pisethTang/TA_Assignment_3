@@ -1,6 +1,10 @@
 \documentclass[a4paper, 11pt]{report}
 \usepackage[margin=2cm]{geometry}
-\usepackage{amsmath, amssymb, amsfonts, xcolor, mathtools, amsthm}
+\usepackage{amsmath, amssymb, amsfonts, xcolor, mathtools, amsthm, float, booktabs, array}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
@@ -8,8 +12,11 @@
 \addbibresource{refs.bib}
 \DefineBibliographyStrings{english}{bibliography={References}}
 
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 \newtheorem{definition}{Definition}
 \newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
 \theoremstyle{remark}
 \newtheorem*{remark}{Remark}
 
@@ -355,11 +362,11 @@ $k$-th weight values do not exceed given bounds and the sums over each of their 
 
 \begin{definition}[MOKP]
 Let $X=\{0,1\}^n$ be the decision space and $n\in\mathbb{N}$. The Multiobjective Knapsack Problem (MOKP) is
-\[
-\text{maximize}\quad f(x)=\bigl(f_1(x),f_2(x)\bigr)
-\qquad
-\text{subject to}\quad g(x)\le \tfrac{n}{2},
-\]
+\begin{equation*}
+    \argmax_{x\in X}f(x)=\bigl(f_1(x),f_2(x)\bigr)
+    \qquad
+    \mathrm{s.t}\quad g(x)\le \tfrac{n}{2},
+\end{equation*}
 with
 \[
 f_1(x)=\sum_{i=1}^{n}2^{\,n-i}x_i,\qquad
@@ -443,6 +450,106 @@ The last inequality holds for $1\le c\le n/2-1$, which covers all possible Type~
     if \((\Phi(x')+\Phi(x'''))/2>\Phi(x'')\) already holds here, it holds for any farther move (which improves even more), confirming that no Type~2 vector can be supported.
 \end{remark}
 
+\section{Basics of Matroid Theory \cite{hillman_matroid_2016}}
+    \begin{quote}
+        A matroid is a structure that generalizes the \emph{properties of independence}. Relevant applications are found in graph theory and linear algebra. There are several ways to define a matroid, 
+        each relate to the concept of independence. This paper will focus on the the definitions of a matroid in terms of bases, the rank function, independent sets and cycles.
+        To understand the matroid being used in the evolutionary algorithm it is best to understand it as the intuition of a graph. The notation for 
+        matroid can be written as 
+        \begin{equation*}
+            \mathcal{M} = (E,\mathcal{I})\qquad\text{or}\qquad\mathcal{M} = (E,B)
+        \end{equation*}
+        Those notation can be defined below.
+    \end{quote}
+\subsection{Bases}
+    \begin{definition}
+        A matroid $\mathcal{M}$ consists of a non-empty finite set $E$ and a non-empty collection $B\subseteq 2^E$, called bases, satisfying the following properties:
+        \begin{itemize}
+            \item[i] No base properly contains another base
+            \item[ii] If $B_1$ and $B_2$ are bases and if any $e\in B_1$, then there is a $f\in B_2$ such that $(B_1\setminus e)\cup f$ is also a base.
+        \end{itemize}
+    \end{definition}
+    \begin{theorem}
+        Every base of a matroid has the same number of elements  
+    \end{theorem}
+    \begin{remark}[On Theorem 1]
+        The above theorem can be easy proof by the base of the linear space. We can take it for granted.
+    \end{remark}
+    \begin{figure}[H]
+        \centering
+        \input{graph.tex}
+        \caption{Graph $G$}
+    \end{figure}
+    \begin{quote}
+        We will take a base of our matroid to be a \emph{spanning tree} of $G$.
+    \end{quote}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{c}
+            \multicolumn{1}{c}{\Large\textbf{Bases}}\\
+            \cmidrule(lr){1-1}
+            $\{a,b,c,d\}$\\
+            $\{a,e,d,c\}$\\
+            $\{b,c,d,e\}$\\
+            $\{b,a,e,d\}$\\
+            $\{c,b,a,e\}$\\
+            $\{c,b,f,e\}$\\
+            $\{c,d,f,a\}$\\
+            $\{c,g,a,e\}$\\
+            $\{c,g,f,e\}$\\
+        \end{tabular}
+        \caption{The Spanning Trees of $G$}
+        \label{tab:spanning-trees-G}
+    \end{table}
+\subsection{Rank function}
+    \begin{definition}
+        A matroid consists of a non-empty finite set E and an integer-valued function r defined on the set of subset of E, satisfying:        
+        \begin{itemize}
+            \item[i] $0\leq r(A)\leq |A|$, for each $A\subseteq E$ 
+            \item[ii] If $A\subseteq B\subseteq E$, then $r(A) \leq r(B)$
+            \item[iii] For any $A,B\subseteq E$, $r(A\cup B) + r(A\cap B)\leq r(A) + r(B)$
+        \end{itemize}
+    \end{definition}
+    \begin{theorem}
+        The rank of M equals the size of a base of M.
+    \end{theorem}
+\subsection{Independent Set}
+    \begin{definition}
+        A matroid $\mathcal{M}$ consists of a non-empty finite set E and a non-empty collection $\mathcal{I}\subseteq 2^E$ (called independence set) 
+        satisfying the following properties:
+        \begin{itemize}
+            \item[i] Any subset of an independent set is independent
+            \item[ii] If I and J are independent sets with $|J|>|I|$ then there is an element e such that $e\in J \wedge e\notin I$. Thus $I\cup e$ is 
+            independent.
+        \end{itemize}
+    \end{definition}
+    \begin{definition}
+        We will take the independent sets of a graph to be the sets of edges in a graph that do not contain a cycle. A forest is a graph that contains 
+        no cycles. A connected forest is a tree.
+    \end{definition}
+    \begin{table}[H]
+        \centering
+        \renewcommand{\arraystretch}{1.2}
+        \begin{tabular}{>{\centering\arraybackslash}m{0.8\linewidth}}
+            \multicolumn{1}{c}{\Large\textbf{Forests of $G$}}\\
+            \cmidrule(lr){1-1}
+            $\{a\}, \{b\}, \{c\}, \{d\}, \{e\}$\\
+            $\{f\}, \{g\}, \{a,b\}, \{b,c\}$\\
+            $\{c,d\}, \{d,e\}, \{e,f\}, \{f,g\}$\\
+            $\{g,a\}, \{a,f\}, \{e,f\}, \{d,f\}$\\
+            $\{b,f\}, \{b,g\}, \{c,g\}, \{d,g\}$\\
+            $\{a,b,c\}, \{a,b,g\}, \{a,e,d\}$\\
+            $\{a,f,d\}, \{a,g,c\}, \{a,g,d\}$\\
+            $\{b,c,d\}, \{b,g,d\}, \{b,f,d\}$\\
+            $\{b,f,e\}, \{c,d,e\}, \{c,g,d\}$\\
+            $\{c,d,f\}, \{e,f,e\}, \{a,f,g\}$\\
+            $\{a,b,c,d\}, \{a,e,d,c\}, \{b,c,d,e\}$\\
+            $\{b,a,e,d\}, \{c,b,a,e\}, \{c,b,f,e\}$\\
+            $\{c,d,f,a\}, \{c,g,a,e\}, \{c,g,f,e\}$\\
+        \end{tabular}
+        \caption{The Forests of $G$}
+        \label{tab:forests-G}
+    \end{table}
 
 \newpage
 \printbibliography
