@@ -5,7 +5,7 @@ import ioh
 
 # configuration parameters for the experim  ents
 BUDGET = 10000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
-DIMENSION = 450   # problem dimension/size (e.g., number of bits for OneMax and LeadingOnes)
+DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and LeadingOnes)
 # REPETITIONS = 10  # number of independent repetitions or runs for each problem
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
