@@ -41,13 +41,13 @@ def main():
             algorithm_info=algorithm.algorithm_info,
             fids = config.PROBLEM_IDS,
             iids = [1], 
-            # dims=[config.DIMENSION],
+            dims=[config.DIMENSION],
             reps=config.REPETITIONS,
             problem_class=config.PROBLEMS_TYPE,  # Use the configured problem class # type: ignore
             old_logger=False,  # type: ignore
             output_directory=str(out_base),
-            # folder_name=f"ioh-data-{algorithm.name}-{algorithm.evaporation_rate}", ======= This is temp for MMAS family only
-            folder_name=f"ioh-data-{algorithm.name}",
+            # folder_name=f"ioh-data-{algorithm.name}", 
+            folder_name=f"ioh-data-{algorithm.name}-pop_size-{algorithm.population_size}", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
             zip_output=True, 
         )
 
@@ -58,12 +58,14 @@ def main():
         elapsed_times.append(elapsed)
         print(f"Elapsed time for algorithm {algorithm.name}: {elapsed:.2f} seconds ({elapsed/60:.2f} minutes) after {config.REPETITIONS} runs on {len(config.PROBLEM_IDS)} problems.")
         print(f"=========== Completed experiments for algorithm: {algorithm.name} ========== ")
+
+    
     print("All experiments completed.")
     print(f"Results are saved in the '{out_base}' directory.")
-
     print("Summary of elapsed times for each algorithm:")
+    # convert elapsed time to minutes and print
     for alg, t in zip(config.ALGORITHMS, elapsed_times):
-        print(f"Total time for {alg.name}: {t:.2f} seconds")
+        print(f"Total time for {alg.name}: {t:.2f} seconds, which is around ({t/60:.2f} minutes)")
 
 
 if __name__ == "__main__":
@@ -71,11 +73,3 @@ if __name__ == "__main__":
 
 
 
-
-# Example usage:
-# Suppose we want to test 2 algorithms: Random Search and RLS on 3 problems: OneMax, LeadingOnes, and N-Queens.
-# 2 * 3 = 6 data files will be generated. 
-# To pass ALL of this data into the IOHProfiler (https://iohanalyzer.liacs.nl/), the following procedure can be used:
-# Simplest: Compress the /data directory into a single zip file. And then pass the zip file to the IOHProfiler. Then we just need to click on the "Fixed Budget Results" tab to see the results.
-# Or, we can zip each data file one by one and then pass them into (in no particular order) the IOHProfiler ... 
-#
