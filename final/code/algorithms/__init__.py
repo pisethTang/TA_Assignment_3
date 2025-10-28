@@ -6,7 +6,7 @@ from .DesignedGA import DesignedGA
 from .MaxMinAS import MaxMinAS
 from .MaxMinASStar import MaxMinASStar
 from .ACO import ACO
-from .GSEMO import GSEMO
+from .GSEMO_Tatiana import GSEMO
 
 
 
