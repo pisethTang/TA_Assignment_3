@@ -41,7 +41,7 @@ def main():
             algorithm_info=algorithm.algorithm_info,
             fids = config.PROBLEM_IDS,
             iids = [1], 
-            dims=[config.DIMENSION],
+            # dims=[config.DIMENSION],
             reps=config.REPETITIONS,
             problem_class=config.PROBLEMS_TYPE,  # Use the configured problem class # type: ignore
             old_logger=False,  # type: ignore
