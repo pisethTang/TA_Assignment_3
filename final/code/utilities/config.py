@@ -1,13 +1,23 @@
-from algorithms import RandomSearch, RandomizedLocalSearch, DesignedGA, OnePlusOneEA
-
 # import necessary module(s)
 import ioh
 
-# For exercise 2
-from algorithms import GSEMO_Seth
+from algorithms import (
+    # For exercise 1
+    RandomSearch,
+    OnePlusOneEA,
+    RandomizedLocalSearch,
+    DesignedGA,
 
-# For exercises 3 and 4
-from algorithms import SingleObjectiveEA, MultiObjectiveEA
+
+    # For exercise 2
+    GSEMO_Seth,
+
+    # For exercises 3 and 4
+    SingleObjectiveEA,
+    MultiObjectiveEA,
+)
+
+
 
 
 
@@ -25,10 +35,14 @@ PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run i
     2101,
     2102,
     2103,
+
     # 2200, # MaxInfluence Problem
     # 2201,
     # 2202,
     # 2203,
+
+
+    # ---- Not required for exercises 3 and 4 ----
     # 2300, # PackWhileTravel Problem
     # 2301,
     # 2302
