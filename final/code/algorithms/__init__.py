@@ -3,12 +3,15 @@ from .OnePlusOneEA import OnePlusOneEA
 from .RLS import RandomizedLocalSearch
 from .RandomSearch import RandomSearch
 from .DesignedGA import DesignedGA
-from .MaxMinAS import MaxMinAS
-from .MaxMinASStar import MaxMinASStar
-from .ACO import ACO
+
+
+# Testing exercise 2 algorithms
+from .GSEMO_Seth import GSEMO_Seth
 from .GSEMO_Tatiana import GSEMO
 
-
+# for exercise 3 and 4
+from .SingleObjectiveEA import SingleObjectiveEA
+from .MultiObjectiveEA import MultiObjectiveEA
 
 # Some comments: 
 # This file will make the "algorithms" directory a package and 
