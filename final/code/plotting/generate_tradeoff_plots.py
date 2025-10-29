@@ -17,13 +17,6 @@ from utilities.utilities import ensure_dir
 
 
 
-# Import specific MOEAs - alternatively, manage imports dynamically
-from algorithms import GSEMO #, NewMultiObjectiveEA # Add your new MOEA here
-
-
-
-
-
 def generate_plots(target_budget: int, output_suffix: str):
     """
     Generates trade-off plots for multi-objective algorithms defined in config.py 
@@ -46,11 +39,7 @@ def generate_plots(target_budget: int, output_suffix: str):
         ensure_dir(algo_plot_dir)
 
         # Define which problem instances to plot (adjust if needed for specific exercises)
-        # Ex 4 only needs MaxCoverage/MaxInfluence for the 100k budget
-        if target_budget == 100000:
-            plot_problem_ids = [pid for pid in config.PROBLEM_IDS if pid < 2300] # Filter for MC and MI
-        else:
-            plot_problem_ids = config.PROBLEM_IDS
+        plot_problem_ids = config.PROBLEM_IDS
 
         for problem_id in plot_problem_ids:
             print(f"  Processing Problem ID: {problem_id}...")
