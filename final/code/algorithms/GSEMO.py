@@ -1,21 +1,26 @@
 from .algorithm_interface import Algorithm
 import ioh 
 import numpy as np
+
 import random
+import matplotlib.pyplot as plot
+import os
 
 '''
 Implementing the GSEMO algorithm to find the optimum solution of some predefined (bi-objective 
 maximisation) problem 'func'. 
+
 The algorithm uses a multi-objective fitness function as defined below for evaluation, and is 
 uniformly constrained through parameter k. 
 '''
 
 class GSEMO(Algorithm):
 
-    def __init__(self, budget: int, constraint_k: int = 10):
+    run_counter = 0
+
+    def __init__(self, budget: int):
         super().__init__(budget, name="GSEMO", algorithm_info="GSEMO algorithm implemented for maximisation with a uniform constraint.")
         self.budget = budget 
-        self.constraint_k = constraint_k
 
     def multObjFit(self, x, x_fitn, y, y_fitn):
         '''
@@ -35,18 +40,21 @@ class GSEMO(Algorithm):
 
     def __call__(self, func: ioh.problem.GraphProblem):
 
+        self.__class__.run_counter += 1
+
         n = func.meta_data.n_variables
         mut_rate = 1/n 
-
+        
         # Generate a bit string individual to initialise the pareto set
         x_init = np.array(np.random.randint(2, size = n))
         pareto = [(x_init, func(x_init))]
 
         # Loop of function evaluations: 
-        for _ in range(self.budget):
+        while func.state.evaluations < self.budget:
+
             # Randomly select an individual from the pareto set
             x = random.choice(pareto)[0]
-            
+
             # Mutate individual by flipping each bit with probability 1/n
             x_mut = np.copy(x)
             for j in range(n):
@@ -54,14 +62,10 @@ class GSEMO(Algorithm):
                     x_mut[j] = 1 - x_mut[j]
 
             f_mut = func(x_mut)
-
-            # Enforce uniform constraint; feasibility for maximum number of 1-bits k 
-            if (np.sum(x_mut) > self.constraint_k):
-                continue
-
+            
             '''
             # Enforce uniform constraint (feasibility for maximum number of 1-bits k) by repairing individuals
-            while (np.sum(x_mut) > self.constraint_k):
+            while (np.sum(x_mut) > constraint_k):
                 one_indices = np.where(x_mut == 1)[0]
                 x_mut[np.random.choice(one_indices)] = 0
             '''
@@ -77,3 +81,26 @@ class GSEMO(Algorithm):
                 # Add to indivudual pareto set
                 pareto.append((x_mut, f_mut))    
 
+
+        # PLOTTING TRADE-OFFS BETWEEN OBJECTIVES: f(x) vs. number of 1-bit elements (as constrained by k)
+        dir = "trade-off plots"
+        os.makedirs(dir, exist_ok=True)
+        out_path = os.path.join(dir, f"GSEMO_F{func.meta_data.problem_id}")
+       
+        if not os.path.exists(out_path):  
+            fit_dat = []
+            k_dat = []
+            for (x, f) in pareto:
+                fit_dat.append(f)   # fitness of elements in pareto set
+                k_dat.append(np.sum(x))     # number of 1-bit elements of each individual in set
+
+            plot.figure()
+            plot.scatter(k_dat, fit_dat)
+            plot.xlabel("Number of Chosen Elements")
+            plot.ylabel("Fitness Values")
+            plot.grid(True)
+            plot.title(f"GSEMO Trade-Offs for F{func.meta_data.problem_id}")
+            plot.savefig(out_path)
+            plot.close()
+
+            
