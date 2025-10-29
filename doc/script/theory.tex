@@ -359,6 +359,20 @@ The optimization problem considered in this study is a special instance of the m
 of which has $m$ profit and $k$ weight values associated with it. The goal is to select a subset of items such that the sums over each of their 
 $k$-th weight values do not exceed given bounds and the sums over each of their $m$-th profit values are maximized.
 \end{quote}
+\begin{definition}[Pareto optimality]
+Let $f : X \to F$, where $f$ is called the \textit{objective function}, $X$ the \textit{decision space}, and 
+$F \subseteq \mathbb{R}^m$ the \textit{objective space}. The elements of $X$ are called \textit{decision vectors} 
+and the elements of $F$ \textit{objective vectors}. 
+
+Let $X' \subseteq X$ denote the set of feasible decision vectors, i.e., decision vectors fulfilling the constraints. 
+A feasible decision vector $x^* \in X'$ is \textit{Pareto optimal} if there is no other $x \in X'$ that dominates 
+$x^*$. The vector $x$ dominates $x^*$, denoted as $x \succ_f x^*$, if $f_i(x) \ge f_i(x^*)$ for all $i = 1, \ldots, m$ 
+and $f_i(x) > f_i(x^*)$ for at least one index $i$.
+
+The set of all Pareto optimal decision vectors $X^*$ is called the \textit{Pareto set}. 
+The corresponding set $F^* = f(X^*)$ is the set of all Pareto optimal objective vectors and is 
+denoted as the \textit{Pareto front}.
+\end{definition}
 
 \begin{definition}[MOKP]
 Let $X=\{0,1\}^n$ be the decision space and $n\in\mathbb{N}$. The Multiobjective Knapsack Problem (MOKP) is
@@ -446,9 +460,22 @@ The last inequality holds for $1\le c\le n/2-1$, which covers all possible Type~
     I am guessing that this is because these positions produce the smallest possible maximization for one objective while minimizing the gain in the other. 
     On the left block of 1s, the outermost position yields the least value for \(f_1\) (due to exponential decay), so moving the isolated 1 to the start of the middle 0s 
     (for \(x'\)) provides only a modest boost to \(f_1\) but significantly reduces \(f_2\). Similarly, for \(x'''\), moving it to the end of the middle 0s (just before the 
-    right 1s) modestly boosts \(f_2\) but greatly penalizes \(f_1\). The logic is symmetric for the second objective. These are the “minimal improvement’’ moves closest to \(x''\); 
+    right 1s) modestly boosts \(f_2\) but greatly penalizes \(f_1\). The logic is symmetric for the second objective. These are the ``minimal improvement'' moves closest to \(x''\); 
     if \((\Phi(x')+\Phi(x'''))/2>\Phi(x'')\) already holds here, it holds for any farther move (which improves even more), confirming that no Type~2 vector can be supported.
 \end{remark}
+\begin{quote}
+Our goal is therefore to investigate how long different multiobjective EAs take to find the whole Pareto set $X^*$ of MOKP. 
+The algorithms we consider are the SEMO (Simple Evolutionary Multiobjective Optimizer) and the FEMO 
+(Fair Evolutionary Multiobjective Optimizer). In contrast to the original version of Laumanns et al.\ (2002), 
+we use the independent-bit mutation, which results, according to the definition of Giel (2003), 
+in the global SEMO and global FEMO. 
+
+Both algorithms were so far only applied to unconstrained problems, so the question arises of how to deal 
+with the constraint here. Our idea is to adapt and generalize the order relation of Definition~1, 
+which so far only involves the objectives and ignores the constraints. 
+This approach makes it unnecessary to incorporate a dedicated constraint-handling technique 
+in the definition of the algorithm. The algorithms can therefore remain unchanged.
+\end{quote}
 
 \section{Basics of Matroid Theory \cite{hillman_matroid_2016}}
     \begin{quote}

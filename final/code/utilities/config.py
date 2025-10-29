@@ -1,6 +1,7 @@
-from algorithms import RandomSearch, RandomizedLocalSearch, MaxMinAS, DesignedGA, ACO, MaxMinASStar, OnePlusOneEA
+from algorithms import RandomSearch, RandomizedLocalSearch, MaxMinAS, DesignedGA, ACO, MaxMinASStar, OnePlusOneEA, SingleObjectiveGA
 import math
 import ioh
+
 
 
 # configuration parameters for the experim  ents
@@ -18,9 +19,9 @@ PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run i
     2201,
     2202,
     2203,
-    2300, # PackWhileTravel Problem
-    2301,
-    2302,
+    # 2300, # PackWhileTravel Problem
+    # 2301,
+    # 2302,
 ]
 # PROBLEMS_TYPE = ioh.ProblemClass.PBO  # Pseudo-Boolean Optimization problems
 PROBLEMS_TYPE = ioh.ProblemClass.GRAPH  # Graph problems
@@ -33,9 +34,10 @@ ALGORITHMS = [
     # MaxMinAS(budget=BUDGET, evaporate_rate=1),
     # MaxMinAS(budget=BUDGET, evaporate_rate=1/math.sqrt(DIMENSION)),
     # MaxMinAS(budget=BUDGET, evaporate_rate=1/DIMENSION),
-    RandomSearch(budget=BUDGET),
-    OnePlusOneEA(budget=BUDGET),
-    RandomizedLocalSearch(budget=BUDGET),
-    DesignedGA(budget=BUDGET, population_size=44, mutation_rate=0.01),
-    # ACO(budget=BUDGET)
+    # RandomSearch(budget=BUDGET),
+    # OnePlusOneEA(budget=BUDGET),
+    # RandomizedLocalSearch(budget=BUDGET),
+    # DesignedGA(budget=BUDGET, population_size=44, mutation_rate=0.01),
+    # ACO(budget=BUDGET),
+    SingleObjectiveGA(budget=BUDGET, population_size=10, diversity_mode="none",rng_seed=1),
 ]
