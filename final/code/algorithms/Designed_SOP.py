@@ -119,6 +119,11 @@ class SOP_EA(Algorithm):
         n = problem.meta_data.n_variables
 
         X = self.rng.integers(0, 2, size=(self.pop_size, n), dtype=int)
+
+        # counts = X.sum(axis=1)
+        # for i, c in enumerate(counts):
+            # print(f"idx={i:2d}  ones={int(c):3d}  x={X[i].tolist()}")
+
         self._Repair(X, problem)
 
         while problem.state.evaluations < self.budget:
@@ -137,7 +142,7 @@ class SOP_EA(Algorithm):
                 children.append(child2)
 
             Children = np.vstack(children)   # shape (k, n)
-            self._UniformMutation(Children)
+            self._KMutation(Children)
 
             self._Repair(Children, problem)
 
