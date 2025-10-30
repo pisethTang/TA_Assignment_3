@@ -9,7 +9,7 @@ class SOP_EA(Algorithm):
                  pop_size: int, 
                  K_Elites: int,
                  mutation_prob: Optional[float] = None,
-                 name: str = "SOP_EA", 
+                 name: Optional[str] = "SOP_EA", 
                  algorithm_info: str = "SOP population-based optimisation",
                 ):
         super().__init__(budget, name, algorithm_info)
