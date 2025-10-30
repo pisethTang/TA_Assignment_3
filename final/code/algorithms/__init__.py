@@ -6,7 +6,7 @@ from .DesignedGA import DesignedGA
 from .MaxMinAS import MaxMinAS
 from .MaxMinASStar import MaxMinASStar
 from .ACO import ACO
-from .Designed_SOP import SingleObjectiveGA
+from .Designed_SOP import SOP_EA
 
 
 

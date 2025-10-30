@@ -12,6 +12,24 @@ from utilities import config
 from utilities.utilities import ensure_dir
 import ioh
 
+def get_unique_folder_name(base_dir: Path, algorithm_name: str, prefix: str = "ioh-data") -> str:
+    """
+    Produce a folder name of the form "{prefix}-{algorithm_name}" that does not
+    clash with existing folders inside base_dir. If there's a clash, append -1, -2, ...
+    Returns the folder name (string) to be passed as ioh.Experiment(..., folder_name=...).
+    """
+    base = f"{prefix}-{algorithm_name}"
+    candidate = base_dir / base
+    if not candidate.exists():
+        return base
+    # Otherwise find next available index
+    idx = 1
+    while True:
+        name = f"{base}-{idx}"
+        if not (base_dir / name).exists():
+            return name
+        idx += 1
+
 
 def main():
     """
@@ -29,11 +47,12 @@ def main():
     # create an array of elapsed times, on for each experiment
     elapsed_times = []
 
-
     for algorithm in config.ALGORITHMS:
         print(f"=========== Running experiments for algorithm: {algorithm.name} ========== ")
         # start time - use perf_counter for accurate wall-clock time measurement
         start_time = time.perf_counter()
+
+        unique_folder = get_unique_folder_name(out_base, algorithm.name)
         # create a new experiment for the current algorithm 
         experiment = ioh.Experiment(
             algorithm=algorithm,
@@ -47,7 +66,7 @@ def main():
             old_logger=False,  # type: ignore
             output_directory=str(out_base),
             # folder_name=f"ioh-data-{algorithm.name}-{algorithm.evaporation_rate}", ======= This is temp for MMAS family only
-            folder_name=f"ioh-data-{algorithm.name}",
+            folder_name=unique_folder,
             zip_output=True, 
         )
 
