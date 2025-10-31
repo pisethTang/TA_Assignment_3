@@ -31,7 +31,7 @@ def main():
 
 
     for algorithm in config.ALGORITHMS:
-        print(f"=========== Running experiments for algorithm: {algorithm.name} ========== ")
+        print(f"=========== Running experiments for algorithm: {algorithm.name} on problems {config.PROBLEM_IDS} pop_size={algorithm.population_size} ========== ")
         # start time - use perf_counter for accurate wall-clock time measurement
         start_time = time.perf_counter()
         # create a new experiment for the current algorithm 
@@ -47,7 +47,7 @@ def main():
             old_logger=False,  # type: ignore
             output_directory=str(out_base),
             # folder_name=f"ioh-data-{algorithm.name}", 
-            folder_name=f"ioh-data-{algorithm.name}-pop_size-{algorithm.population_size}", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
+            folder_name=f"ioh-data-{algorithm.name}-pop_size-{algorithm.population_size}-beta-{algorithm.beta}", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
             zip_output=True, 
         )
 

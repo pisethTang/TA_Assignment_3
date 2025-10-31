@@ -109,12 +109,12 @@ class SingleObjectiveEA(Algorithm):
         # Pre-compute power-law distribution
         self.power_law_distribution = self.compute_power_law_distribution(n)
         
-        # Sparse initialization
+        # Initialize with reasonable density (10-20% selected)
         population = []
         for _ in range(self.population_size):
             individual = np.zeros(n, dtype=int)
-            # with 2-5% of nodes (more likely to be feasible)
-            num_ones = np.random.randint(max(1, n // 50), max(2, n // 20))
+            # Start with 10-20% of nodes selected (better for graph problems)
+            num_ones = np.random.randint(max(1, n // 10), max(2, n // 5))
             ones_positions = np.random.choice(n, size=num_ones, replace=False)
             individual[ones_positions] = 1
             population.append(individual)
@@ -129,11 +129,14 @@ class SingleObjectiveEA(Algorithm):
             
             population[i], fitnesses[i] = self.quick_repair(population[i], func)
 
-        # Early stopping
+        # Early stopping (disabled - let it run the full budget)
         best_fitness = np.max(fitnesses) if len(fitnesses) > 0 else -np.inf
-        gens_no_improvement = 0
-        max_gens_no_improvement = 30  # Stop if no improvement for 30 gens
+        gens_no_improvement:int = 0
         
+
+
+        # max_gens_no_improvement:int = float('inf')  # Never stop early
+        max_gens_no_improvement = max(200, self.budget // (self.population_size * 2))
         generation = 0
         
         # Main evolutionary loop
@@ -146,7 +149,7 @@ class SingleObjectiveEA(Algorithm):
                 break
             
             # Track feasibility for adaptive repair (vectorized)
-            num_feasible = np.sum(fitnesses >= 0)
+            # num_feasible = np.sum(fitnesses >= 0)
             
             # Generate offspring
             offspring_population = []
@@ -166,17 +169,10 @@ class SingleObjectiveEA(Algorithm):
                 # Evaluate
                 offspring_fitness = func(offspring.tolist())
 
-                # Minimal repair (only if needed)
+                # Repair infeasible solutions more aggressively
                 if offspring_fitness < 0:
-                    # Only repair if:
-                    # 1. Less than half the population is feasible, and
-                    # 2. We have enough budget left
-                    should_repair = (
-                        num_feasible < self.population_size // 2 and 
-                        func.state.evaluations < self.budget - 20
-                    )
-                    
-                    if should_repair:
+                    # Repair if we have budget left
+                    if func.state.evaluations < self.budget - 10:
                         offspring, offspring_fitness = self.quick_repair(offspring, func)
                 
                 offspring_population.append(offspring)

@@ -71,8 +71,6 @@ ALGORITHMS = [
                     population_size=POPULATION_SIZES[0],
                     beta=1.5,
                     tournament_size=3,  # 2 or 3.
-                    # constraint_budget=100,  # Cardinality constraint for MaxInfluence
-                    # use_swap_mutation=False  # Constraint-preserving mutation
                     ),
     # SingleObjectiveEA(budget=BUDGET, 
     #                 population_size=POPULATION_SIZES[1],
@@ -86,7 +84,11 @@ ALGORITHMS = [
     #                 ),
 
     # MultiObjectiveEA's runs (uncomment to test)
-    # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[0]),
+    # MultiObjectiveEA(budget=BUDGET, 
+    #                 population_size=POPULATION_SIZES[0],
+    #                 archive_size=10,
+    #                 beta=1.5),
+
     # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[1]),
     # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[2]),
 ]
