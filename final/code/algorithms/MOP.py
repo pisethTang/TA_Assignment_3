@@ -32,13 +32,12 @@ class MOP (Algorithm):
             problem(X[index].tolist()) 
         
     def _is_dominating (self, a: np.ndarray, b: np.ndarray, problem: ioh.problem.GraphProblem) -> bool:
-        is_no_worse = problem(a.tolist()) > problem(b.tolist()) # fitness
-
-        is_strictly_better = a.sum() <= b.sum() # cost
-        
-        return is_no_worse and is_strictly_better
+        fa = problem(a.tolist())
+        fb = problem(b.tolist())
+        cost_a = a.sum()
+        cost_b = b.sum()
+        return (fa >= fb and cost_a <= cost_b) and (fa > fb or cost_a < cost_b)
     
-
     def _Sort(self, X: np.ndarray, problem: ioh.problem.GraphProblem) -> list[list[int]]:
         pop_size = X.shape[0]
         S = [set() for _ in range(pop_size)]
@@ -94,7 +93,6 @@ class MOP (Algorithm):
         
         return distances
     
-    
     def _CrowdedComparison(self, i: int, j: int, ranks: np.ndarray, distances: np.ndarray) -> bool:
         # Returns True if i <_n j (i is better than j)
         if ranks[i] < ranks[j]:
@@ -103,57 +101,171 @@ class MOP (Algorithm):
             return False
         # Same rank
         return distances[i] > distances[j]
-    
+
+    def _EliteNeighbour(self, X: np.ndarray, k: int, problem: ioh.problem.GraphProblem) -> np.ndarray:
+        # Compute the fitness for each solution (row)
+        fitnesses = np.array([problem(x.tolist()) for x in X])
+        
+        # Get the indices sorted in descending order (highest fitness first)
+        indices = np.argsort(fitnesses)[::-1]
+        
+        # Select the top k indices
+        top_k_indices = indices[:k]
+        
+        # Return the indices (you can use X[top_k_indices] to get the actual solutions)
+        return top_k_indices
+
+    def _UniformCX(self, p1: np.ndarray, p2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        n = len(p1)
+        # Generate a random mask: 1 means take from p1 for c1 (p2 for c2), 0 means take from p2 for c1 (p1 for c2)
+        mask = self.rng.integers(0, 2, size=n, dtype=int)
+        
+        c1 = np.where(mask, p1, p2)
+        c2 = np.where(mask, p2, p1)
+        
+        return c1, c2
+
+    def _KMutation(self, X: np.ndarray) -> None:
+        # Mutate each individual in X in place
+        num_individuals, n = X.shape
+        for i in range(num_individuals):
+            # Choose random k: 1 <= k <= n//2
+            k = self.rng.integers(1, n//2 + 1)
+            # k = int(n//5)
+            # Choose k unique random indices
+            indices = self.rng.choice(n, size=k, replace=False)
+            # Flip the bits at those indices
+            X[i, indices] = 1 - X[i, indices]
+        
+    def _UniformMutation(self, X: np.ndarray) -> None:
+        # Mutate each individual in X in place by flipping each bit with probability mutation_prob (or 1/n if not set)
+        num_individuals, n = X.shape
+        prob = self.mutation_prob if self.mutation_prob is not None else 1.0 / n
+        mask = self.rng.uniform(size=(num_individuals, n)) < prob
+        X[mask] = 1 - X[mask]
+
+    def _OnesTournament(self, X: np.ndarray, tournament_size: int, num_to_select: int) -> np.ndarray:
+        pop_size, n = X.shape
+        ones = X.sum(axis=1)  # Fitness: number of ones (assuming maximization under constraint)
+        
+        selected_indices = []
+        for _ in range(num_to_select):
+            # Pick k unique random candidates
+            candidates = self.rng.choice(pop_size, tournament_size, replace=False)
+            # Select the one with the highest fitness
+            best_idx = candidates[np.argmax(ones[candidates])]
+            selected_indices.append(best_idx)
+        
+        return X[np.array(selected_indices)]  # Return the selected individuals
+
     # Example usage inside your search:
     def __call__(self, problem: ioh.problem.GraphProblem):
         n = problem.meta_data.n_variables
-        # n = 5
 
-        X = self.rng.integers(0, 2, size=(self.pop_size, n), dtype=int)
+        # Initialize parent population P
+        P = self.rng.integers(0, 2, size=(self.pop_size, n), dtype=int)
 
-        # counts = X.sum(axis=1)
-        # for i, c in enumerate(counts):
-            # print(f"idx={i:2d}  ones={int(c):3d}  x={X[i].tolist()}")
+        # Optional repair for initial population
+        self._Repair(P, problem)
 
-        self._Repair(X, problem)
+        # Evaluate initial population (to update evaluations)
+        for x in P:
+            problem(x.tolist())
 
-        
-        # for i in range(self.pop_size):
-        #     print(f"idx={i:2d}  fitness={problem(X[i].tolist()):6.2f}  ones={int(X[i].sum()):3d}  x={X[i].tolist()}")
-        
-        # for i in range(self.pop_size - 1):
-        #     print(self._is_dominating(X[i], X[i+1], problem))
+        # Compute initial fronts, ranks, distances for P
+        fronts = self._Sort(P, problem)
+        ranks = np.zeros(self.pop_size, dtype=int)
+        for r, f in enumerate(fronts):
+            for idx in f:
+                ranks[idx] = r
+        distances = np.zeros(self.pop_size)
+        for f in fronts:
+            if len(f) <= 2:
+                distances[f] = np.inf
+                continue
+            front_X = P[f]
+            front_dist = self._CrowdingDist(front_X, problem)
+            distances[f] = front_dist
 
-        fronts = self._Sort(X, problem)
+        while problem.state.evaluations < self.budget:
+            # Create child population Q
+            Q = np.zeros((self.pop_size, n), dtype=int)
+            for pair in range(self.pop_size // 2):
+                # Binary tournament for parent1
+                cand1 = self.rng.integers(self.pop_size)
+                cand2 = self.rng.integers(self.pop_size)
+                p1_idx = cand1 if self._CrowdedComparison(cand1, cand2, ranks, distances) else cand2
 
-        # Print results for verification
-        print("Test Population:")
-        for i, x in enumerate(X):
-            fitness = problem(x.tolist())
-            cost = x.sum()
-            print(f"Idx {i}: x={x.tolist()}, fitness={fitness}, cost={cost}")
+                # Binary tournament for parent2
+                cand1 = self.rng.integers(self.pop_size)
+                cand2 = self.rng.integers(self.pop_size)
+                p2_idx = cand1 if self._CrowdedComparison(cand1, cand2, ranks, distances) else cand2
 
-        print("\nNon-Dominated Fronts:")
-        for rank, front in enumerate(fronts, start=1):
-            print(f"Front {rank}: Indices {front}")
-            for idx in front:
-                x = X[idx]
-                fitness = problem(x.tolist())
-                cost = x.sum()
-                print(f"  - Idx {idx}: fitness={fitness}, cost={cost}")
-            
-        
-        if fronts:
-            first_front_indices = fronts[4]
-            front_X = X[first_front_indices]
-            crowding_distances = self._CrowdingDist(front_X, problem)
-            
-            print("\nCrowding Distances for First Front:")
-            for i, idx in enumerate(first_front_indices):
-                dist = crowding_distances[i]
-                x = X[idx]
-                fitness = problem(x.tolist())
-                cost = x.sum()
-                print(f"  - Idx {idx}: fitness={fitness}, cost={cost}, crowding_dist={dist:.2f}")
-                
+                # Crossover
+                child1, child2 = self._UniformCX(P[p1_idx], P[p2_idx])
 
+                # Add to Q
+                Q[pair*2] = child1
+                Q[pair*2 + 1] = child2
+
+            # If pop_size odd, add one more child by copying a selected parent or something
+            if self.pop_size % 2 == 1:
+                cand1 = self.rng.integers(self.pop_size)
+                cand2 = self.rng.integers(self.pop_size)
+                p_idx = cand1 if self._CrowdedComparison(cand1, cand2, ranks, distances) else cand2
+                Q[-1] = P[p_idx].copy()
+
+            # Mutation
+            self._UniformMutation(Q)
+
+            # Optional repair
+            self._Repair(Q, problem)
+
+            # Evaluate Q
+            for x in Q:
+                if problem.state.evaluations >= self.budget:
+                    break
+                problem(x.tolist())
+
+            # Combine R = P U Q
+            R = np.concatenate((P, Q), axis=0)
+
+            # Non-dominated sort on R
+            fronts = self._Sort(R, problem)
+
+            # Build new P
+            new_P = np.zeros((self.pop_size, n), dtype=int)
+            ptr = 0
+            for f in fronts:
+                if ptr + len(f) <= self.pop_size:
+                    new_P[ptr:ptr + len(f)] = R[f]
+                    ptr += len(f)
+                else:
+                    # Crowding distance for this front
+                    front_X = R[f]
+                    front_dist = self._CrowdingDist(front_X, problem)
+
+                    # Sort front by descending crowding distance
+                    sort_order = np.argsort(front_dist)[::-1]
+
+                    remaining = self.pop_size - ptr
+                    new_P[ptr:ptr + remaining] = front_X[sort_order[:remaining]]
+                    break
+
+            # Update P
+            P = new_P
+
+            # Recompute fronts, ranks, distances for new P
+            fronts = self._Sort(P, problem)
+            ranks = np.zeros(self.pop_size, dtype=int)
+            for r, f in enumerate(fronts):
+                for idx in f:
+                    ranks[idx] = r
+            distances = np.zeros(self.pop_size)
+            for f in fronts:
+                if len(f) <= 2:
+                    distances[f] = np.inf
+                    continue
+                front_X = P[f]
+                front_dist = self._CrowdingDist(front_X, problem)
+                distances[f] = front_dist
