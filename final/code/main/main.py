@@ -47,7 +47,7 @@ def main():
             old_logger=False,  # type: ignore
             output_directory=str(out_base),
             # folder_name=f"ioh-data-{algorithm.name}", 
-            folder_name=f"ioh-data-{algorithm.name}-pop_size-{algorithm.population_size}-beta-{algorithm.beta}", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
+            folder_name=f"ioh-data-{algorithm.name}-pop_size-{algorithm.population_size}-beta-{algorithm.beta}-v2", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
             zip_output=True, 
         )
 

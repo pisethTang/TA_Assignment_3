@@ -136,7 +136,7 @@ class SingleObjectiveEA(Algorithm):
 
 
         # max_gens_no_improvement:int = float('inf')  # Never stop early
-        max_gens_no_improvement = max(200, self.budget // (self.population_size * 2))
+        # max_gens_no_improvement = max(100, self.budget // (self.population_size * 2))
         generation = 0
         
         # Main evolutionary loop
@@ -145,12 +145,12 @@ class SingleObjectiveEA(Algorithm):
                 break
 
             # Early stopping check
-            if gens_no_improvement >= max_gens_no_improvement:
-                break
+            # if gens_no_improvement >= max_gens_no_improvement:
+            #     break
             
             # Track feasibility for adaptive repair (vectorized)
             # num_feasible = np.sum(fitnesses >= 0)
-            
+
             # Generate offspring
             offspring_population = []
             offspring_fitnesses = []
@@ -210,3 +210,4 @@ class SingleObjectiveEA(Algorithm):
                 gens_no_improvement += 1
             
             generation += 1
+
