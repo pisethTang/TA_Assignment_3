@@ -6,7 +6,7 @@ import numpy as np
 
 class SingleObjectiveEA(Algorithm):
     '''
-    Optimized population-based Fast GA for monotone submodular graph problems.
+    Optimized population-based Fast GA using Power Law Mutation for monotone submodular graph problems.
     Fast version with minimal repairs and early stopping.
     '''
     def __init__(self, budget: int, population_size: int = 20, beta: float = 1.5, 
@@ -53,7 +53,6 @@ class SingleObjectiveEA(Algorithm):
     def quick_repair(self, individual: np.ndarray, func) -> tuple:
         '''
         ONE-SHOT repair: remove nodes once, don't iterate.
-        Much faster than your version.
         '''
         solution = individual.copy()
         fitness = func(solution.tolist())
@@ -170,7 +169,7 @@ class SingleObjectiveEA(Algorithm):
                 # Minimal repair (only if needed)
                 if offspring_fitness < 0:
                     # Only repair if:
-                    # 1. Less than half the population is feasible, OR
+                    # 1. Less than half the population is feasible, and
                     # 2. We have enough budget left
                     should_repair = (
                         num_feasible < self.population_size // 2 and 
@@ -204,7 +203,7 @@ class SingleObjectiveEA(Algorithm):
             # Keep top population_size
             top_indices = sorted_indices[:self.population_size]
             population = [combined_pop[i] for i in top_indices]
-            fitnesses = combined_fitnesses[top_indices]  # Keep as NumPy array
+            fitnesses = combined_fitnesses[top_indices] 
             
             # Track improvement for early stopping (vectorized)
             current_best = np.max(fitnesses)
