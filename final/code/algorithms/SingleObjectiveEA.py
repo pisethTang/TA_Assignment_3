@@ -174,39 +174,28 @@ class SingleObjectiveEA(Algorithm):
             # num_feasible = np.sum(fitnesses >= 0)
 
             # Generate offspring
-            offspring_population = []
-            offspring_fitnesses = []
+            offspring_population: list = []
+            offspring_fitnesses: list = []
             
             for _ in range(self.population_size):
                 if func.state.evaluations >= self.budget:
                     break
 
                 # Select TWO parents for crossover
-                parent1_idx = self.tournament_select_fast(population, fitnesses)
-                parent2_idx = self.tournament_select_fast(population, fitnesses)
-                
-                parent1 = population[parent1_idx]
-                parent2 = population[parent2_idx]
-                
-                # Crossover (with probability crossover_rate)
-                if np.random.rand() < self.crossover_rate:
-                    offspring = self.uniform_crossover(parent1, parent2)
-                else:
-                    # No crossover: just copy one parent
-                    offspring = parent1.copy()
-                
+                parent_idx: int = self.tournament_select_fast(population, fitnesses)
+                parent = population[parent_idx]
+
+
                 # Mutate
-                offspring = self.mutate(offspring, n)
+                offspring = self.mutate(parent, n)
                 
                 # Evaluate
                 offspring_fitness = func(offspring.tolist())
 
-                # Repair infeasible solutions more aggressively
-                if offspring_fitness < 0:
-                    # Repair if we have budget left
-                    if func.state.evaluations < self.budget - 10:
-                        offspring, offspring_fitness = self.quick_repair(offspring, func)
-                
+                # Repair infeasible solutions if we have budget left
+                if offspring_fitness < 0 and func.state.evaluations < self.budget - 10:
+                    offspring, offspring_fitness = self.quick_repair(offspring, func)
+
                 offspring_population.append(offspring)
                 offspring_fitnesses.append(offspring_fitness)
             
@@ -242,5 +231,12 @@ class SingleObjectiveEA(Algorithm):
                 gens_no_improvement += 1
             
             generation += 1
+                # Report final statistics
+        
+        
+        
+        final_best_fitness = np.max(fitnesses)
+        print(f"[FINAL] Gen {generation}, Evals {func.state.evaluations}, "
+              f"Best fitness: {final_best_fitness:.2f}")
 
 
