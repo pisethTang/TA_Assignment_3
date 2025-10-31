@@ -7,7 +7,7 @@ from .MaxMinAS import MaxMinAS
 from .MaxMinASStar import MaxMinASStar
 from .ACO import ACO
 from .Designed_SOP import SOP_EA
-
+from .MOP import MOP
 
 
 # Some comments: 
