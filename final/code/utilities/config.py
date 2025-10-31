@@ -31,15 +31,15 @@ DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and 
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
 PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run in our experiment in `main.py`
-    2100, # MaxCoverage Problem
-    2101,
-    2102,
-    2103,
+    # 2100, # MaxCoverage Problem
+    # 2101,
+    # 2102,
+    # 2103,
 
-    # 2200, # MaxInfluence Problem
-    # 2201,
-    # 2202,
-    # 2203,
+    2200, # MaxInfluence Problem
+    2201,
+    2202,
+    2203,
 
 
     # ---- Not required for exercises 3 and 4 ----
@@ -51,7 +51,9 @@ PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run i
 PROBLEMS_TYPE = ioh.ProblemClass.GRAPH  # Graph problems
 
 
-POPULATION_SIZES = [10, 20, 50]  # Different population sizes to experiment with for population-based algorithms
+POPULATION_SIZES = [10, 
+                    20, 
+                    50]  # Different population sizes to experiment with for population-based algorithms
 
 # a list of algorithm instances to run 
 ALGORITHMS = [
@@ -65,9 +67,23 @@ ALGORITHMS = [
     
     
     # SingleObjectiveEA's runs (uncomment to test)
-    SingleObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[0]),
-    SingleObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[1]),
-    SingleObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[2]),
+    SingleObjectiveEA(budget=BUDGET, 
+                    population_size=POPULATION_SIZES[0],
+                    beta=1.5,
+                    tournament_size=3,  # 2 or 3.
+                    # constraint_budget=100,  # Cardinality constraint for MaxInfluence
+                    # use_swap_mutation=False  # Constraint-preserving mutation
+                    ),
+    # SingleObjectiveEA(budget=BUDGET, 
+    #                 population_size=POPULATION_SIZES[1],
+    #                 beta=1.5,
+    #                 tournament_size=4,  # 2 or 3.
+    #                 ),
+    # SingleObjectiveEA(budget=BUDGET, 
+    #                 population_size=POPULATION_SIZES[2],
+    #                 beta=1.5,
+    #                 tournament_size=10,  # 2 or 3.
+    #                 ),
 
     # MultiObjectiveEA's runs (uncomment to test)
     # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[0]),

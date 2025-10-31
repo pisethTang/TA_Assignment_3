@@ -3,6 +3,7 @@ import ioh
 import numpy as np
 
 
+
 class SingleObjectiveEA(Algorithm):
     '''
     Optimized population-based Fast GA for monotone submodular graph problems.
@@ -10,8 +11,8 @@ class SingleObjectiveEA(Algorithm):
     '''
     def __init__(self, budget: int, population_size: int = 20, beta: float = 1.5, 
                 tournament_size: int = 3):
-        super().__init__(budget, name="Fast GA", 
-                        algorithm_info=f"Population-based Fast GA (pop={population_size}, β={beta})")
+        super().__init__(budget, name="Fast-GA", 
+                        algorithm_info=f"Population-based Fast-GA (pop={population_size}, β={beta})")
         self.population_size = population_size
         self.budget = budget 
         self.beta = beta
@@ -187,7 +188,10 @@ class SingleObjectiveEA(Algorithm):
             
             # Fast survival selection with NumPy
             combined_pop = population + offspring_population
-            combined_fitnesses = np.array(fitnesses + offspring_fitnesses)
+
+
+            offspring_fitnesses = np.array(offspring_fitnesses)
+            combined_fitnesses = np.concatenate([fitnesses, offspring_fitnesses])
             
             # Vectorized feasibility check
             feasible_mask = (combined_fitnesses >= 0).astype(int)
