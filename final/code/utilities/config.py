@@ -27,7 +27,6 @@ from algorithms import (
 # configuration parameters for the experiments
 BUDGET = 10000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
 DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and LeadingOnes)
-# REPETITIONS = 10  # number of independent repetitions or runs for each problem
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
 PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run in our experiment in `main.py`
@@ -37,9 +36,9 @@ PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run i
     # 2103,
 
     2200, # MaxInfluence Problem
-    2201,
-    2202,
-    2203,
+    # 2201,
+    # 2202,
+    # 2203,
 
 
     # ---- Not required for exercises 3 and 4 ----
@@ -67,21 +66,26 @@ ALGORITHMS = [
     
     
     # SingleObjectiveEA's runs (uncomment to test)
-    SingleObjectiveEA(budget=BUDGET, 
-                    population_size=POPULATION_SIZES[0],
-                    beta=1.5,
-                    tournament_size=3,  # 2 or 3.
-                    ),
+    # ================================== USE PARAMETERS BELOW ======================================
     # SingleObjectiveEA(budget=BUDGET, 
-    #                 population_size=POPULATION_SIZES[1],
+    #                 population_size=POPULATION_SIZES[0],
     #                 beta=1.5,
-    #                 tournament_size=4,  # 2 or 3.
+    #                 tournament_size=3,
     #                 ),
+    SingleObjectiveEA(budget=BUDGET, 
+                    population_size=POPULATION_SIZES[1],
+                    beta=1.5,
+                    tournament_size=6,
+                    ),
     # SingleObjectiveEA(budget=BUDGET, 
     #                 population_size=POPULATION_SIZES[2],
     #                 beta=1.5,
-    #                 tournament_size=10,  # 2 or 3.
+    #                 tournament_size=8,
     #                 ),
+    # ========================================================================
+
+
+
 
     # MultiObjectiveEA's runs (uncomment to test)
     # MultiObjectiveEA(budget=BUDGET, 
