@@ -12,7 +12,7 @@ class MOP (Algorithm):
                  name: Optional[str] = "MOP", 
                  algorithm_info: str = "MOP population-based optimisation",
                 ):
-        super().__init__(budget, name, algorithm_info)
+        super().__init__(budget, name=f"MOP-{int(budget/1000)}K-{pop_size}", algorithm_info=algorithm_info)
         self.rng = np.random.default_rng()  # Added RNG for random operations
         self.pop_size = pop_size
         self.K_Elites = K_Elites

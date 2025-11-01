@@ -11,13 +11,13 @@ DIMENSION = 450   # problem dimension/size (e.g., number of bits for OneMax and 
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
 PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run in our experiment in `main.py`
-    # 2100, # MaxCoverage Problem
-    # 2101,
-    # 2102,
-    # 2103,
-    # 2200, # MaxInfluence Problem
-    # 2201,
-    # 2202,
+    2100, # MaxCoverage Problem
+    2101,
+    2102,
+    2103,
+    2200, # MaxInfluence Problem
+    2201,
+    2202,
     2203,
     # 2300, # PackWhileTravel Problem
     # 2301,
@@ -54,5 +54,9 @@ ALGORITHMS = [
     # SOP_EA(budget=100000,pop_size=20,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P2"),
     # SOP_EA(budget=100000,pop_size=50,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P5"),
 
-    MOP(budget=10000, pop_size=10, mutation_prob=0.5, name="MOP-Test"),
+    MOP(budget=10000, pop_size=10, mutation_prob=0.5),
+    MOP(budget=10000, pop_size=20, mutation_prob=0.5),
+    MOP(budget=10000, pop_size=50, mutation_prob=0.5),
+
+    MOP(budget=100000, pop_size=20, mutation_prob=0.5),
 ]
