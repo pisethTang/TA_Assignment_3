@@ -26,7 +26,7 @@ class GSEMO(Algorithm):
         The function returns how x dominates y for some problem predefined func. 
         '''
 
-        if (x_fitn > y_fitn and np.sum(x) < np.sum(y)):
+        if (x_fitn > y_fitn and np.sum(x) <= np.sum(y)):
             return "STRICT"
         if (x_fitn >= y_fitn and np.sum(x) <= np.sum(y)):
             return "WEAK"
@@ -61,9 +61,8 @@ class GSEMO(Algorithm):
 
             # Optimisation step: 
             # Ensure fitness is positive; if not, repair by flipping one bits
-            ''' 
             if (f_mut < 0): 
-                Option to repair solution by flipping 1 bits 
+                # Option to repair solution by flipping 1 bits 
                 one_indices = np.where(x_mut == 1)[0]
                 for i in one_indices:
                     x_mut[i] = 0
@@ -71,11 +70,11 @@ class GSEMO(Algorithm):
                     if f_new >= 0:
                         f_mut = f_new
                         break    
-            '''
             
-            # Optimisation step: 
-            # Enforce uniform constraint (feasibility for maximum number of 1-bits k) by repairing individuals
             '''
+            # Optimisation step? 
+            # Enforce uniform constraint (feasibility for maximum number of 1-bits k) by repairing individuals
+            
             while (np.sum(x_mut) > constraint_k):
                 one_indices = np.where(x_mut == 1)[0]
                 x_mut[np.random.choice(one_indices)] = 0
@@ -86,11 +85,13 @@ class GSEMO(Algorithm):
             
             # If not strictly dominated...
             if not dominatingX: 
+
+                
                 # Delete all solutions that x weakly dominates
                 pareto = [(y, y_fit) for y, y_fit in pareto if self.multObjFit(x_mut, f_mut, y, y_fit) != "WEAK"]  
                 
                 '''
-                Alternative deletion that optimises
+                # Alternative deletion that optimises; inapplicable for the given pseudocode 
                 pareto = [(y, y_fit) for y, y_fit in pareto if self.multObjFit(x_mut, f_mut, y, y_fit) != "STRICT"]  
                 '''
 
@@ -112,7 +113,7 @@ class GSEMO(Algorithm):
 
             plot.figure()
             plot.scatter(k_dat, fit_dat)
-            plot.xlabel("Number of Chosen Elements")
+            plot.xlabel("Number of Chosen Elements (1-bits)")
             plot.ylabel("Fitness Values")
             plot.grid(True)
             plot.title(f"GSEMO Trade-Offs for F{func.meta_data.problem_id}")
@@ -120,3 +121,7 @@ class GSEMO(Algorithm):
             plot.close()
         
 
+# To-do: - weaken if-statement in the function; weaken if-statement criteria for the deletion 
+#        - write explicit definition of formulation in .txt
+#        - complete analyses 
+# 
