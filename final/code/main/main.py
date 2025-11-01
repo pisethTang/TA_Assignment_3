@@ -46,7 +46,7 @@ def main():
             problem_class=config.PROBLEMS_TYPE,  # Use the configured problem class # type: ignore
             old_logger=False,  # type: ignore
             output_directory=str(out_base),
-            folder_name=f"ioh-data-exercise3-soea-{algorithm.name}-max-influence", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
+            folder_name=f"ioh-data-exercise3-MOEA-{algorithm.name}", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
             zip_output=True, 
         )
 

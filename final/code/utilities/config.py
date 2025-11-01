@@ -30,10 +30,10 @@ DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and 
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
 PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run in our experiment in `main.py`
-    # 2100, # MaxCoverage Problem
-    # 2101,
-    # 2102,
-    # 2103,
+    2100, # MaxCoverage Problem
+    2101,
+    2102,
+    2103,
 
     2200, # MaxInfluence Problem
     2201,
@@ -53,7 +53,6 @@ PROBLEMS_TYPE = ioh.ProblemClass.GRAPH  # Graph problems
 POPULATION_SIZES = [10, 
                     20, 
                     50]  # Different population sizes to experiment with for population-based algorithms
-
 # a list of algorithm instances to run 
 ALGORITHMS = [
     
@@ -72,12 +71,12 @@ ALGORITHMS = [
     #                 beta=1.5,
     #                 tournament_size=3,
     #                 ),
-    SingleObjectiveEA(budget=BUDGET, 
-                    population_size=POPULATION_SIZES[1],
-                    beta=1.5,
-                    tournament_size=6,
-                    # patience_factor=0.1,
-                    ),
+    # SingleObjectiveEA(budget=BUDGET, 
+    #                 population_size=POPULATION_SIZES[1],
+    #                 beta=1.5,
+    #                 tournament_size=6,
+    #                 # patience_factor=0.1,
+    #                 ),
     # SingleObjectiveEA(budget=BUDGET, 
     #                 population_size=POPULATION_SIZES[2],
     #                 beta=1.5,
@@ -89,10 +88,12 @@ ALGORITHMS = [
 
 
     # MultiObjectiveEA's runs (uncomment to test)
-    # MultiObjectiveEA(budget=BUDGET, 
-    #                 population_size=POPULATION_SIZES[0],
-    #                 archive_size=10,
-    #                 beta=1.5),
+    MultiObjectiveEA(
+        budget=10000,
+        population_size=10,
+        K_Elites=5,           # Use top 50% as parents (moderate selection)
+        mutation_prob=None    # Default 1/n (adaptive to problem size)
+    ),
 
     # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[1]),
     # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[2]),
