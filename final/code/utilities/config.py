@@ -1,4 +1,4 @@
-from algorithms import RandomSearch, RandomizedLocalSearch, MaxMinAS, DesignedGA, ACO, MaxMinASStar, OnePlusOneEA, SOP_EA
+from algorithms import RandomSearch, RandomizedLocalSearch, MaxMinAS, DesignedGA, ACO, MaxMinASStar, OnePlusOneEA, SOP_EA, MOP
 import math
 import ioh
 
@@ -47,10 +47,12 @@ ALGORITHMS = [
         # - UMA90P1: budget 100K, pop_size=10, Elites=6, mu_prob=0.5, EliteNeig-UniCX-KMu-Tour
         # - UMA90P2: budget 100K, pop_size=20, Elites=6, mu_prob=0.5, EliteNeig-UniCX-KMu-Tour
         # - UMA90P5: budget 100K, pop_size=50, Elites=6, mu_prob=0.5, EliteNeig-UniCX-KMu-Tour
-    SOP_EA(budget=10000,pop_size=10,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P1"),
-    SOP_EA(budget=10000,pop_size=20,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P2"),
-    SOP_EA(budget=10000,pop_size=50,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P5"),
-    SOP_EA(budget=100000,pop_size=10,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UM90P1"),
-    SOP_EA(budget=100000,pop_size=20,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P2"),
-    SOP_EA(budget=100000,pop_size=50,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P5"),
+    # SOP_EA(budget=10000,pop_size=10,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P1"),
+    # SOP_EA(budget=10000,pop_size=20,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P2"),
+    # SOP_EA(budget=10000,pop_size=50,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P5"),
+    # SOP_EA(budget=100000,pop_size=10,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UM90P1"),
+    # SOP_EA(budget=100000,pop_size=20,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P2"),
+    # SOP_EA(budget=100000,pop_size=50,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P5"),
+
+    RandomizedLocalSearch(budget=100000),
 ]
