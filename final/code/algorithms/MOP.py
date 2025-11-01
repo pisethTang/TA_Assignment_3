@@ -7,7 +7,7 @@ class MOP (Algorithm):
     def __init__(self, 
                  budget: int, 
                  pop_size: int, 
-                 K_Elites: int,
+                 K_Elites: Optional[int]=None,
                  mutation_prob: Optional[float] = None,
                  name: Optional[str] = "MOP", 
                  algorithm_info: str = "MOP population-based optimisation",
@@ -102,19 +102,6 @@ class MOP (Algorithm):
         # Same rank
         return distances[i] > distances[j]
 
-    def _EliteNeighbour(self, X: np.ndarray, k: int, problem: ioh.problem.GraphProblem) -> np.ndarray:
-        # Compute the fitness for each solution (row)
-        fitnesses = np.array([problem(x.tolist()) for x in X])
-        
-        # Get the indices sorted in descending order (highest fitness first)
-        indices = np.argsort(fitnesses)[::-1]
-        
-        # Select the top k indices
-        top_k_indices = indices[:k]
-        
-        # Return the indices (you can use X[top_k_indices] to get the actual solutions)
-        return top_k_indices
-
     def _UniformCX(self, p1: np.ndarray, p2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         n = len(p1)
         # Generate a random mask: 1 means take from p1 for c1 (p2 for c2), 0 means take from p2 for c1 (p1 for c2)
@@ -168,10 +155,6 @@ class MOP (Algorithm):
         # repair for initial population
         self._Repair(P, problem)
 
-        # Evaluate initial population (to update evaluations)
-        # for x in P:
-        #     problem(x.tolist())
-
         # Compute initial fronts, ranks, distances for P
         fronts = self._Sort(P, problem)
         ranks = np.zeros(self.pop_size, dtype=int)
@@ -190,6 +173,7 @@ class MOP (Algorithm):
         while problem.state.evaluations < self.budget:
             # Create child population Q
             Q = np.zeros((self.pop_size, n), dtype=int)
+
             for pair in range(self.pop_size // 2):
                 # Binary tournament for parent1
                 cand1 = self.rng.integers(self.pop_size)
@@ -208,7 +192,7 @@ class MOP (Algorithm):
                 Q[pair*2] = child1
                 Q[pair*2 + 1] = child2
 
-            # If pop_size odd, add one more child by copying a selected parent or something
+            # If pop_size odd, add one more child by copying a selected parent
             if self.pop_size % 2 == 1:
                 cand1 = self.rng.integers(self.pop_size)
                 cand2 = self.rng.integers(self.pop_size)
@@ -216,16 +200,10 @@ class MOP (Algorithm):
                 Q[-1] = P[p_idx].copy()
 
             # Mutation
-            self._UniformMutation(Q)
+            self._KMutation(Q)
 
-            # Optional repair
+            # Repair
             self._Repair(Q, problem)
-
-            # Evaluate Q
-            for x in Q:
-                if problem.state.evaluations >= self.budget:
-                    break
-                problem(x.tolist())
 
             # Combine R = P U Q
             R = np.concatenate((P, Q), axis=0)
