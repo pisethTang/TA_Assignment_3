@@ -25,7 +25,7 @@ from algorithms import (
 
 
 # configuration parameters for the experiments
-BUDGET = 10000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
+BUDGET = 100000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
 DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and LeadingOnes)
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
@@ -36,9 +36,9 @@ PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run i
     # 2103,
 
     2200, # MaxInfluence Problem
-    # 2201,
-    # 2202,
-    # 2203,
+    2201,
+    2202,
+    2203,
 
 
     # ---- Not required for exercises 3 and 4 ----
@@ -76,6 +76,7 @@ ALGORITHMS = [
                     population_size=POPULATION_SIZES[1],
                     beta=1.5,
                     tournament_size=6,
+                    # patience_factor=0.1,
                     ),
     # SingleObjectiveEA(budget=BUDGET, 
     #                 population_size=POPULATION_SIZES[2],

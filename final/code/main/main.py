@@ -31,13 +31,13 @@ def main():
 
 
     for algorithm in config.ALGORITHMS:
-        print(f"=========== Running experiments for algorithm: {algorithm.name} on problems {config.PROBLEM_IDS} pop_size={algorithm.population_size} ========== ")
+        print(f"=========== Running experiments for algorithm: {algorithm.name} on problems {config.PROBLEM_IDS} pop_size={algorithm.population_size} with a budget={config.BUDGET} ========== ")
         # start time - use perf_counter for accurate wall-clock time measurement
         start_time = time.perf_counter()
         # create a new experiment for the current algorithm 
         experiment = ioh.Experiment(
             algorithm=algorithm,
-            algorithm_name=algorithm.name,
+            algorithm_name=f"{algorithm.name}-{config.BUDGET}-pop{algorithm.population_size}",
             algorithm_info=algorithm.algorithm_info,
             fids = config.PROBLEM_IDS,
             iids = [1], 
@@ -46,8 +46,7 @@ def main():
             problem_class=config.PROBLEMS_TYPE,  # Use the configured problem class # type: ignore
             old_logger=False,  # type: ignore
             output_directory=str(out_base),
-            # folder_name=f"ioh-data-{algorithm.name}", 
-            folder_name=f"ioh-data-{algorithm.name}-pop_size-{algorithm.population_size}-beta-{algorithm.beta}-v2", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
+            folder_name=f"ioh-data-exercise3-soea-{algorithm.name}-max-influence", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
             zip_output=True, 
         )
 

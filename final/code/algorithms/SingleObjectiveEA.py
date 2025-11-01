@@ -3,14 +3,17 @@ import ioh
 import numpy as np
 
 
+from .algorithm_interface import Algorithm
+import ioh 
+import numpy as np
+
 
 class SingleObjectiveEA(Algorithm):
     '''
-    Optimized population-based Fast GA using Power Law Mutation for monotone submodular graph problems.
-    Fast version with minimal repairs and early stopping.
+    Optimized population-based Fast GA with proper all-time best tracking.
     '''
     def __init__(self, budget: int, population_size: int = 20, beta: float = 1.5, 
-                tournament_size: int = 3):
+                tournament_size: int = 3, patience_factor: float = 0.04):
         super().__init__(budget, name="Fast-GA", 
                         algorithm_info=f"Population-based Fast-GA (pop={population_size}, β={beta})")
         self.population_size = population_size
@@ -18,13 +21,11 @@ class SingleObjectiveEA(Algorithm):
         self.beta = beta
         self.tournament_size = tournament_size
         self.power_law_distribution = None
-
-    # ==================== POWER-LAW MUTATION ====================
-    
+        self.patience_evaluations = int(budget * patience_factor)
+        
     def compute_power_law_distribution(self, n: int) -> np.ndarray:
         '''Compute power-law distribution (cached).'''
         distribution = np.zeros(n + 1)
-        
         C = sum(i ** (-self.beta) for i in range(1, n // 2 + 1))
         
         for i in range(1, min(n // 2 + 1, n + 1)):
@@ -41,37 +42,21 @@ class SingleObjectiveEA(Algorithm):
             self.power_law_distribution = self.compute_power_law_distribution(n)
         
         k = np.random.choice(n + 1, p=self.power_law_distribution)
-        k = max(1, k)  # At least 1 flip
+        k = max(1, k)
         
         flip_indices = np.random.choice(n, size=k, replace=False)
         offspring[flip_indices] = 1 - offspring[flip_indices]
         
         return offspring
 
-    # ==================== CROSSOVER ====================
-    
-    def uniform_crossover(self, parent1: np.ndarray, parent2: np.ndarray) -> np.ndarray:
-        '''
-        Uniform crossover: each bit chosen randomly from either parent.
-        Better for graph problems than one-point crossover.
-        '''
-        n = len(parent1)
-        offspring = np.where(np.random.rand(n) < 0.5, parent1, parent2)
-        return offspring
-
-    # ==================== FAST REPAIR (MINIMAL) ====================
-    
     def quick_repair(self, individual: np.ndarray, func) -> tuple:
-        '''
-        ONE-SHOT repair: remove nodes once, don't iterate.
-        '''
+        '''ONE-SHOT repair: remove nodes once.'''
         solution = individual.copy()
         fitness = func(solution.tolist())
         
         if fitness >= 0:
             return solution, fitness
         
-        # ONE-TIME removal: remove 20% of selected nodes
         ones_positions = np.where(solution == 1)[0]
         
         if len(ones_positions) > 0:
@@ -79,18 +64,13 @@ class SingleObjectiveEA(Algorithm):
             remove_positions = np.random.choice(ones_positions, size=num_to_remove, replace=False)
             solution[remove_positions] = 0
             
-            # Re-evaluate ONCE
             if func.state.evaluations < self.budget:
                 fitness = func(solution.tolist())
         
         return solution, fitness
 
-    # ==================== FAST SELECTION ====================
-    
     def tournament_select_fast(self, population: list, fitnesses: np.ndarray) -> int:
-        '''
-        Return INDEX only (no copying). Fully vectorized.
-        '''
+        '''Return INDEX only. Fully vectorized.'''
         pop_size = len(population)
         tournament_idx = np.random.choice(
             pop_size, 
@@ -98,22 +78,17 @@ class SingleObjectiveEA(Algorithm):
             replace=False
         )
         
-        # Vectorized: extract fitness values for tournament
         tournament_fits = fitnesses[tournament_idx]
         feasible_mask = tournament_fits >= 0
         
         if np.any(feasible_mask):
-            # Among feasible: pick best fitness
             feasible_fits = np.where(feasible_mask, tournament_fits, -np.inf)
             best_local = np.argmax(feasible_fits)
         else:
-            # All infeasible: pick least infeasible
             best_local = np.argmax(tournament_fits)
         
         return tournament_idx[best_local]
 
-
-        
     def initialize_population(self, n: int, func) -> tuple:
         '''Ultra-safe initialization with very few nodes.'''
         population = []
@@ -121,14 +96,10 @@ class SingleObjectiveEA(Algorithm):
         
         for _ in range(self.population_size):
             individual = np.zeros(n, dtype=int)
-            
-            # SAFE INITIALIZATION: 4-6 nodes (well under B=10)
             num_ones = np.random.randint(4, 7)
-            
             ones_positions = np.random.choice(n, size=num_ones, replace=False)
             individual[ones_positions] = 1
             
-            # Direct evaluation (NO REPAIR during initialization)
             fitness = func(individual.tolist())
             
             population.append(individual)
@@ -140,103 +111,85 @@ class SingleObjectiveEA(Algorithm):
         fitnesses = np.array(fitnesses)
         return population, fitnesses
 
-    # ==================== MAIN ALGORITHM ====================
-    
     def __call__(self, func: ioh.problem.PBO):
         n = func.meta_data.n_variables
         
         # Pre-compute power-law distribution
         self.power_law_distribution = self.compute_power_law_distribution(n)
         
-        # Initialize with reasonable density (10-20% selected)
+        # Initialize population
         population, fitnesses = self.initialize_population(n, func)
    
-        # Early stopping (disabled - let it run the full budget)
-        best_fitness = np.max(fitnesses) if len(fitnesses) > 0 else -np.inf
-        gens_no_improvement:int = 0
-        
-
-
-        # max_gens_no_improvement:int = float('inf')  # Never stop early
-        # max_gens_no_improvement = max(100, self.budget // (self.population_size * 2))
+        # Track ALL-TIME best fitness (not just current population best)
+        all_time_best_fitness = np.max(fitnesses) if len(fitnesses) > 0 else -np.inf
+        all_time_best_individual = population[np.argmax(fitnesses)].copy() if len(fitnesses) > 0 else None
+        evals_at_last_improvement = func.state.evaluations
         generation = 0
         
         # Main evolutionary loop
         while func.state.evaluations < self.budget:
             if func.state.optimum_found:
+                print(f"[EARLY STOP] Optimum found at Gen {generation}, Evals {func.state.evaluations}")
                 break
 
-            # Early stopping check
-            # if gens_no_improvement >= max_gens_no_improvement:
-            #     break
+            # EARLY STOPPING based on ALL-TIME best (not current population)
+            evals_since_improvement = func.state.evaluations - evals_at_last_improvement
+            if evals_since_improvement >= self.patience_evaluations:
+                print(f"[EARLY STOP] No improvement for {evals_since_improvement} evals. "
+                      f"Stopping at Gen {generation}, Evals {func.state.evaluations}, "
+                      f"All-time best fitness: {all_time_best_fitness:.2f}")
+                break
             
-            # Track feasibility for adaptive repair (vectorized)
-            # num_feasible = np.sum(fitnesses >= 0)
-
             # Generate offspring
-            offspring_population: list = []
-            offspring_fitnesses: list = []
+            offspring_population = []
+            offspring_fitnesses = []
             
             for _ in range(self.population_size):
                 if func.state.evaluations >= self.budget:
                     break
 
-                # Select TWO parents for crossover
-                parent_idx: int = self.tournament_select_fast(population, fitnesses)
+                parent_idx = self.tournament_select_fast(population, fitnesses)
                 parent = population[parent_idx]
-
-
-                # Mutate
                 offspring = self.mutate(parent, n)
-                
-                # Evaluate
                 offspring_fitness = func(offspring.tolist())
 
-                # Repair infeasible solutions if we have budget left
+                # Minimal repair
                 if offspring_fitness < 0 and func.state.evaluations < self.budget - 10:
                     offspring, offspring_fitness = self.quick_repair(offspring, func)
 
                 offspring_population.append(offspring)
                 offspring_fitnesses.append(offspring_fitness)
+                
+                # Track ALL-TIME best (even before survival selection)
+                if offspring_fitness > all_time_best_fitness:
+                    all_time_best_fitness = offspring_fitness
+                    all_time_best_individual = offspring.copy()
+                    evals_at_last_improvement = func.state.evaluations
             
             if not offspring_population:
                 break
             
-            # Fast survival selection with NumPy
+            # Fast survival selection
             combined_pop = population + offspring_population
-
-
             offspring_fitnesses = np.array(offspring_fitnesses)
             combined_fitnesses = np.concatenate([fitnesses, offspring_fitnesses])
             
-            # Vectorized feasibility check
             feasible_mask = (combined_fitnesses >= 0).astype(int)
-            
-            # lexsort sorts by keys from LAST to FIRST (bottom to top)
-            # So we pass: (fitness, feasibility) to sort by feasibility first, then fitness
-            # Negate values to get descending order
             sorted_indices = np.lexsort((-combined_fitnesses, -feasible_mask))
             
-            # Keep top population_size
             top_indices = sorted_indices[:self.population_size]
             population = [combined_pop[i] for i in top_indices]
-            fitnesses = combined_fitnesses[top_indices] 
+            fitnesses = combined_fitnesses[top_indices]
             
-            # Track improvement for early stopping (vectorized)
+            # Also check if current population has better fitness than all-time best
             current_best = np.max(fitnesses)
-            if current_best > best_fitness: # Improvement
-                best_fitness = current_best
-                gens_no_improvement = 0    
-            else:                           # No improvement
-                gens_no_improvement += 1
+            if current_best > all_time_best_fitness:
+                all_time_best_fitness = current_best
+                all_time_best_individual = population[np.argmax(fitnesses)].copy()
+                evals_at_last_improvement = func.state.evaluations
             
             generation += 1
-                # Report final statistics
         
-        
-        
-        final_best_fitness = np.max(fitnesses)
+        # Report final statistics with ALL-TIME best
         print(f"[FINAL] Gen {generation}, Evals {func.state.evaluations}, "
-              f"Best fitness: {final_best_fitness:.2f}")
-
-
+              f"All-time best fitness: {all_time_best_fitness:.2f}")
