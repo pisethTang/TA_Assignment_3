@@ -165,12 +165,12 @@ class MOP (Algorithm):
         # Initialize parent population P
         P = self.rng.integers(0, 2, size=(self.pop_size, n), dtype=int)
 
-        # Optional repair for initial population
+        # repair for initial population
         self._Repair(P, problem)
 
         # Evaluate initial population (to update evaluations)
-        for x in P:
-            problem(x.tolist())
+        # for x in P:
+        #     problem(x.tolist())
 
         # Compute initial fronts, ranks, distances for P
         fronts = self._Sort(P, problem)
