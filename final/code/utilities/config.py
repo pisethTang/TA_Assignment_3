@@ -54,9 +54,15 @@ ALGORITHMS = [
     # SOP_EA(budget=100000,pop_size=20,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P2"),
     # SOP_EA(budget=100000,pop_size=50,K_Elites=6, mutation_prob=0.5, name="SOP-EA-UMA9P5"),
 
+<<<<<<< HEAD
     MOP(budget=10000, pop_size=10, mutation_prob=0.5),
     MOP(budget=10000, pop_size=20, mutation_prob=0.5),
     MOP(budget=10000, pop_size=50, mutation_prob=0.5),
 
     MOP(budget=100000, pop_size=20, mutation_prob=0.5),
+=======
+    MOP(budget=10000, pop_size=50, mutation_prob=0.5),
+    MOP(budget=10000, pop_size=20, mutation_prob=0.5),
+    MOP(budget=10000, pop_size=50, mutation_prob=0.5),
+>>>>>>> 4d59879 (new)
 ]
