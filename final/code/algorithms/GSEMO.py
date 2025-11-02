@@ -121,7 +121,4 @@ class GSEMO(Algorithm):
             plot.close()
         
 
-# To-do: - weaken if-statement in the function; weaken if-statement criteria for the deletion 
-#        - write explicit definition of formulation in .txt
-#        - complete analyses 
-# 
+ 
