@@ -25,19 +25,19 @@ from algorithms import (
 
 
 # configuration parameters for the experiments
-BUDGET = 100000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
+BUDGET = 10000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
 DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and LeadingOnes)
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
 PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run in our experiment in `main.py`
-    2100, # MaxCoverage Problem
-    2101,
-    2102,
-    2103,
+    # 2100, # MaxCoverage Problem
+    # 2101,
+    # 2102,
+    # 2103,
 
-    2200, # MaxInfluence Problem
-    2201,
-    2202,
+    # 2200, # MaxInfluence Problem
+    # 2201,
+    # 2202,
     2203,
 
 
@@ -48,7 +48,7 @@ PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run i
 ]
 # PROBLEMS_TYPE = ioh.ProblemClass.PBO  # Pseudo-Boolean Optimization problems
 PROBLEMS_TYPE = ioh.ProblemClass.GRAPH  # Graph problems
-
+B = 10  # cost constraint
 
 POPULATION_SIZES = [10, 
                     20, 
@@ -88,13 +88,63 @@ ALGORITHMS = [
 
 
     # MultiObjectiveEA's runs (uncomment to test)
-    MultiObjectiveEA(
-        budget=10000,
-        population_size=10,
-        K_Elites=5,           # Use top 50% as parents (moderate selection)
-        mutation_prob=None    # Default 1/n (adaptive to problem size)
-    ),
+    # MultiObjectiveEA(
+    #     budget=BUDGET,
+    #     population_size=POPULATION_SIZES[0],
+    #     K_Elites=5,           # Use top 50% as parents (moderate selection)
+    #     mutation_prob=None    # Default 1/n (adaptive to problem size)
+    # ),
+    # MultiObjectiveEA(budget=BUDGET, 
+    #                 population_size=POPULATION_SIZES[1],
+    #                 heavy_mix=0.15,
+    #                 k_max=10,
+    #                 parent_selection="crowded",
+    #                 ),
+    # MultiObjectiveEA(
+    #     budget=BUDGET,
+    #     population_size=10,
+    #     mutation_mode="hybrid",    # 'uniform' | 'heavy' | 'hybrid'
+    #     heavy_mix=0.10,            # 10% heavy-tailed, 90% uniform
+    #     k_max=10,                  # cap heavy flips
+    #     beta=1.5,                  # required by your course
+    #     mutation_prob=None,        # uniform side defaults to 1/n
+    #     parent_selection="crowded",# or "elites"
+    #     # If you prefer elites for pop 10:
+    #     # parent_selection="elites", K_Elites=5,
+    #     B=B,
+    #     name="NSGAII-hybrid-10"
+    # ),    
+    
+    
+    # pop = 20
+    # MultiObjectiveEA(
+    #     budget=BUDGET,
+    #     population_size=20,
+    #     mutation_mode="hybrid",
+    #     heavy_mix=0.15,
+    #     k_max=10,
+    #     beta=1.5,
+    #     mutation_prob=None,
+    #     parent_selection="crowded",
+    #     # or elites: K_Elites=10
+    #     B=B,
+    #     name="NSGAII-20"
+    # ),
 
-    # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[1]),
+
+    # pop = 50
+    MultiObjectiveEA(
+        budget=BUDGET,
+        population_size=50,
+        mutation_mode="hybrid",
+        heavy_mix=0.15,
+        k_max=10,
+        beta=1.5,
+        mutation_prob=None,
+        parent_selection="crowded",
+        # or elites: K_Elites=25
+        B=B,
+        name="NSGAII-hybrid-50"
+    ),
     # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[2]),
 ]

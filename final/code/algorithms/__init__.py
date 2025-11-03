@@ -14,7 +14,6 @@ from .SingleObjectiveEA import SingleObjectiveEA
 from .MultiObjectiveEA import MultiObjectiveEA
 
 
-
 # Some comments: 
 # This file will make the "algorithms" directory a package and 
 # will allow us to import the classes from other files in this directory.

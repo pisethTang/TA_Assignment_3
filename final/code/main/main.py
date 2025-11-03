@@ -47,6 +47,7 @@ def main():
             old_logger=False,  # type: ignore
             output_directory=str(out_base),
             folder_name=f"ioh-data-exercise3-MOEA-{algorithm.name}", # for population-based algorithms (single objective and multi-objective), technically for our designed GA as well.
+            merge_output=False, # whether to merge with existing data (of same name) or create new files
             zip_output=True, 
         )
 
