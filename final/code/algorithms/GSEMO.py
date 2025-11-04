@@ -36,7 +36,6 @@ class GSEMO(Algorithm):
             return "INCOMPARABLE"
 
     def __call__(self, func: ioh.problem.GraphProblem):
-
         n = func.meta_data.n_variables
         mut_rate = 1/n 
         
@@ -97,28 +96,26 @@ class GSEMO(Algorithm):
 
                 # Add to indivudual pareto set
                 pareto.append((x_mut, f_mut))    
-
+        
+        return pareto
         
         # PLOTTING TRADE-OFFS BETWEEN OBJECTIVES: f(x) vs. number of 1-bit elements (as constrained by k)
-        dir = "trade-off plots"
-        os.makedirs(dir, exist_ok=True)
-        out_path = os.path.join(dir, f"GSEMO_F{func.meta_data.problem_id}")
-       
-        if not os.path.exists(out_path):  
-            fit_dat = []
-            k_dat = []
-            for (x, f) in pareto:
-                fit_dat.append(f)   # fitness of elements in pareto set
-                k_dat.append(np.sum(x))     # number of 1-bit elements of each individual in set
-
-            plot.figure()
-            plot.scatter(k_dat, fit_dat)
-            plot.xlabel("Number of Chosen Elements (1-bits)")
-            plot.ylabel("Fitness Values")
-            plot.grid(True)
-            plot.title(f"GSEMO Trade-Offs for F{func.meta_data.problem_id}")
-            plot.savefig(out_path)
-            plot.close()
-        
-
- 
+        # dir = "trade-off plots"
+        # os.makedirs(dir, exist_ok=True)
+        # out_path = os.path.join(dir, f"GSEMO_F{func.meta_data.problem_id}")
+    #    
+        # if not os.path.exists(out_path):  
+            # fit_dat = []
+            # k_dat = []
+            # for (x, f) in pareto:
+                # fit_dat.append(f)   # fitness of elements in pareto set
+                # k_dat.append(np.sum(x))     # number of 1-bit elements of each individual in set
+# 
+            # plot.figure()
+            # plot.scatter(k_dat, fit_dat)
+            # plot.xlabel("Number of Chosen Elements (1-bits)")
+            # plot.ylabel("Fitness Values")
+            # plot.grid(True)
+            # plot.title(f"GSEMO Trade-Offs for F{func.meta_data.problem_id}")
+            # plot.savefig(out_path)
+            # plot.close()

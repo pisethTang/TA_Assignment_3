@@ -6,12 +6,13 @@ from .DesignedGA import DesignedGA
 
 
 # Testing exercise 2 algorithms
-from .GSEMO_Seth import GSEMO_Seth
-from .GSEMO_Tatiana import GSEMO
+# from .GSEMO_Seth import GSEMO_Seth
+from .GSEMO import GSEMO
 
 # for exercise 3 and 4
 from .SingleObjectiveEA import SingleObjectiveEA
 from .MultiObjectiveEA import MultiObjectiveEA
+from .MOP import MOP
 
 
 # Some comments: 
