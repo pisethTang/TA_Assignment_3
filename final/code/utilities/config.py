@@ -25,7 +25,11 @@ from algorithms import (
 
 
 # configuration parameters for the experiments
-BUDGET = 10000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
+BUDGET_1 = 10000   # maximum number of function evaluations per run (or number of iterations or generations for GAs)
+BUDGET_2 = 100000  # maximum number of function evaluations per run (for exercises 3 and 4)
+BUDGET = BUDGET_1  # default budget to use
+
+
 DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and LeadingOnes)
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
@@ -82,18 +86,19 @@ ALGORITHMS = [
     #                 beta=1.5,
     #                 tournament_size=8,
     #                 ),
+    
     # ========================================================================
 
 
 
 
     # MultiObjectiveEA's runs (uncomment to test)
-    # MultiObjectiveEA(
-    #     budget=BUDGET,
-    #     population_size=POPULATION_SIZES[0],
-    #     K_Elites=5,           # Use top 50% as parents (moderate selection)
-    #     mutation_prob=None    # Default 1/n (adaptive to problem size)
-    # ),
+    MultiObjectiveEA(
+        budget=BUDGET,
+        population_size=POPULATION_SIZES[0],
+        K_Elites=5,           # Use top 50% as parents (moderate selection)
+        mutation_prob=None    # Default 1/n (adaptive to problem size)
+    ),
     # MultiObjectiveEA(budget=BUDGET, 
     #                 population_size=POPULATION_SIZES[1],
     #                 heavy_mix=0.15,
@@ -133,18 +138,18 @@ ALGORITHMS = [
 
 
     # pop = 50
-    MultiObjectiveEA(
-        budget=BUDGET,
-        population_size=50,
-        mutation_mode="hybrid",
-        heavy_mix=0.15,
-        k_max=10,
-        beta=1.5,
-        mutation_prob=None,
-        parent_selection="crowded",
-        # or elites: K_Elites=25
-        B=B,
-        name="NSGAII-hybrid-50"
-    ),
+    # MultiObjectiveEA(
+    #     budget=BUDGET,
+    #     population_size=50,
+    #     mutation_mode="hybrid",
+    #     heavy_mix=0.15,
+    #     k_max=10,
+    #     beta=1.5,
+    #     mutation_prob=None,
+    #     parent_selection="crowded",
+    #     # or elites: K_Elites=25
+    #     B=B,
+    #     name="NSGAII-hybrid-50"
+    # ),
     # MultiObjectiveEA(budget=BUDGET, population_size=POPULATION_SIZES[2]),
 ]

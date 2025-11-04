@@ -24,7 +24,7 @@ def generate_plots(target_budget: int, output_suffix: str):
     """
     
     # --- Base output directory for all plots ---
-    base_plot_output_dir = code_dir.parent.parent / "doc" / "plots"
+    base_plot_output_dir = code_dir.parent.parent / "doc" / "Tradeoff_plots"
     ensure_dir(base_plot_output_dir)
 
     print(f"\n--- Generating Trade-off Plots for Budget: {target_budget} ---")

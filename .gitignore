@@ -15,7 +15,7 @@ __pycache__/
 
 # virtual environment directories
 .venv/
-
+.vscode/
 # macOS system files
 .DS_Store
 
