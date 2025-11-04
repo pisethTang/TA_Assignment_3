@@ -34,7 +34,7 @@ DIMENSION = 100   # problem dimension/size (e.g., number of bits for OneMax and 
 REPETITIONS = 30  # number of independent repetitions or runs for each problem
 
 PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run in our experiment in `main.py`
-    # 2100, # MaxCoverage Problem
+    2100, # MaxCoverage Problem
     # 2101,
     # 2102,
     # 2103,
@@ -42,7 +42,7 @@ PROBLEM_IDS = [ # list of problems, identified by the following IDs, to be run i
     # 2200, # MaxInfluence Problem
     # 2201,
     # 2202,
-    2203,
+    # 2203,
 
 
     # ---- Not required for exercises 3 and 4 ----
