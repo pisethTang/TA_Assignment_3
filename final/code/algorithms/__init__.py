@@ -6,8 +6,6 @@ from .DesignedGA import DesignedGA
 
 
 # Testing exercise 2 algorithms
-# from .GSEMO_Seth import GSEMO_Seth
-from .GSEMO import GSEMO
 
 # for exercise 3 and 4
 from .MOP import MOP
