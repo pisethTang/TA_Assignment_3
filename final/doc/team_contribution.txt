@@ -1,0 +1,6 @@
+Miki: Whole exercise 1
+Tatiana: Whole exercise 2
+Tri Hai: Single-objective optimisation algorithm implementation and design, work reviewer, formulation for exercise 2, exercise 4.
+Seth: Single-objective optimisation algorithm implementation and design, work reviewer, exercise 4, multi-objective optimisation algorithm 
+implementation and design, analysis for exercise 3.
+An Phan: Multi-objective optimisation algorithm implementation and design, exercise 4, analysis for exercise 3. 
