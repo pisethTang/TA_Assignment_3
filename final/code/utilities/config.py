@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 # import necessary module(s)
-=======
-from algorithms import RandomSearch, RandomizedLocalSearch, MaxMinAS, DesignedGA, ACO, MaxMinASStar, OnePlusOneEA, SOP_EA
-import math
->>>>>>> Theories
 import ioh
 
 from algorithms import (

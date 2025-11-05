@@ -3,13 +3,6 @@ from .OnePlusOneEA import OnePlusOneEA
 from .RLS import RandomizedLocalSearch
 from .RandomSearch import RandomSearch
 from .DesignedGA import DesignedGA
-<<<<<<< HEAD
-=======
-from .MaxMinAS import MaxMinAS
-from .MaxMinASStar import MaxMinASStar
-from .ACO import ACO
-from .Designed_SOP import SOP_EA
->>>>>>> Theories
 
 
 # Testing exercise 2 algorithms
@@ -17,8 +10,6 @@ from .Designed_SOP import SOP_EA
 from .GSEMO import GSEMO
 
 # for exercise 3 and 4
-from .SingleObjectiveEA import SingleObjectiveEA
-from .MultiObjectiveEA import MultiObjectiveEA
 from .MOP import MOP
 
 
