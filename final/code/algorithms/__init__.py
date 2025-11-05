@@ -3,6 +3,13 @@ from .OnePlusOneEA import OnePlusOneEA
 from .RLS import RandomizedLocalSearch
 from .RandomSearch import RandomSearch
 from .DesignedGA import DesignedGA
+<<<<<<< HEAD
+=======
+from .MaxMinAS import MaxMinAS
+from .MaxMinASStar import MaxMinASStar
+from .ACO import ACO
+from .Designed_SOP import SOP_EA
+>>>>>>> Theories
 
 
 # Testing exercise 2 algorithms

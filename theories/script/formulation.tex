@@ -1,0 +1,129 @@
+% LaTeX conversion of the provided page (content unchanged)
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage[margin=1in]{geometry}
+\usepackage{enumitem}
+\newcommand{\R}{\rm I\!R}
+\begin{document}
+\paragraph{Functions}
+\begin{quote}
+    The \emph{coverage} problem is a problem relates to \emph{graph
+    theory}. We can define the \emph{submodular and monotone} using 
+    the notation from graph theory. Given a graph $G=(V,E)$. Our 
+    search space is the vertex space $V$. The submodular function
+    can be defined as:
+    \[
+        f: 2^V\rightarrow\R
+    \]
+    $A\subseteq B\subseteq 2^V$ are sets of vertices, it is 
+    monotonic when:
+    \[
+    A\subseteq B\implies f(A)\le f(B).
+    \]
+    it is \emph{submodular}, given that $v\in V\setminus B$ when:
+    \[
+    f(B\cup\{v\})-f(B)\le f(A\cup\{v\})-f(A).
+    \]
+\end{quote}
+\bigskip
+\paragraph{Objective Functions}
+\begin{quote}
+    I will defined $\boldsymbol{v}\subseteq V$ be a set of vertices, the relevant notation will be written in bold with a lowercase letter. The bold, lowercase letter indicate a set of values.
+\end{quote}
+\textbf{Uniform $k$-constraint cost}
+\begin{quote}
+    The \emph{uniform cost} function $c:2^V\rightarrow\R_{\geq0}$ 
+    is a linear function
+    with weight $\boldsymbol{w}$ and defined as:
+    \begin{equation*}
+        \begin{aligned}
+            c(\boldsymbol{v}) = \sum_i^n w_i\cdot c(v_i)\leq k\in\R,\\
+            \text{where } w_i = 1,\;c(v_i) = 1
+        \end{aligned}
+    \end{equation*}
+    Notice that $c(v_i)$ is the cost of the vertex being chosen in a
+    set not the cost of its out-going edge. The value for 
+    $\boldsymbol{w} = \boldsymbol{1}$ and $c(v_i) = 1$ is given.
+\end{quote}
+\textbf{Fitness Function}
+\begin{quote}
+    For the \emph{Maximum Coverage}
+    \[
+        \argmax_{\boldsymbol{v}\subseteq V} f(\boldsymbol{v}) = |N(\boldsymbol{v})|,\quad\text{ where }
+        N(\boldsymbol{v})\text{ is the out-going neighbours of } 
+        \boldsymbol{v}
+    \]
+    For the \emph{Max Influence}, this is a probabilistic problem,
+    therefore we need to find the \emph{seed set} 
+    $\boldsymbol{v}\in V$ that has the highest expected influence 
+    value.
+    \[
+        \argmax_{\boldsymbol{v}\subseteq V} f(\boldsymbol{v}) = 
+        \mathbb{E}[IC(\boldsymbol{v})]
+    \]
+    \begin{quote}
+        $IC(.)$ is a \emph{Independence Cascade process}, in short, 
+        this is a propagation process that how a vertex $v$ can 
+        influence vertex $u$ with probability $p_{v,u}$ from time
+        $t\rightarrow t+1$.
+    \end{quote}
+\end{quote}
+\begin{quote}
+    Overall, the fitness of a search point is a 2D vector given by.
+    Therefore this is a bi-objective optimisation problem, defined
+    as
+    \begin{equation*}
+        \begin{aligned}
+            &\argmax_{\boldsymbol{v}\subseteq V}\mathsf{F}(\boldsymbol{v}) 
+            = (f^\prime(\boldsymbol{v}),-c(\boldsymbol{v}))\\
+            &\qquad\quad\text{subject to}\\
+            &\qquad\qquad c(\boldsymbol{v})\leq 10\\
+            &\qquad\qquad f^\prime(\boldsymbol{v})=\begin{cases}
+                f(\boldsymbol{v}),&\quad c(\boldsymbol{v})\leq k=10\\
+                (k = 10) - f(\boldsymbol{v})&,\quad c(\boldsymbol{v})> k=10
+            \end{cases}
+        \end{aligned} 
+    \end{equation*}
+\end{quote}
+\bigskip
+\paragraph{Dominance Formulation}
+\begin{quote}
+    For any two given solution sets 
+    $\boldsymbol{v}\succ\boldsymbol{u}$. We have that
+    \begin{equation*}
+        \begin{aligned}
+            &\mathsf{F}(\boldsymbol{v})\succ\mathsf{F}
+            (\boldsymbol{u})\\
+            &\iff\begin{cases}
+                f^\prime(\boldsymbol{v})\geq f^\prime(\boldsymbol{u})\\
+                c(\boldsymbol{v})\leq c(\boldsymbol{u})\\
+                \mathsf{F}(\boldsymbol{v})\neq\mathsf{F}
+                (\boldsymbol{u})
+            \end{cases}
+        \end{aligned}
+    \end{equation*}
+    Thus, we can say that
+    \begin{equation*}
+        \begin{aligned}
+            \mathsf{F}(\boldsymbol{v})\succ\mathsf{F}
+            (\boldsymbol{u})\iff\begin{cases}
+                f^\prime(\boldsymbol{v})\geq f^\prime(\boldsymbol{u})\\
+                c(\boldsymbol{v})< c(\boldsymbol{u})\\
+            \end{cases}
+        \end{aligned}
+    \end{equation*}
+    And also,
+    \begin{equation*}
+        \begin{aligned}
+            \mathsf{F}(\boldsymbol{v})\succeq\mathsf{F}
+            (\boldsymbol{u})\iff\begin{cases}
+                 f^\prime(\boldsymbol{v})\geq f^\prime(\boldsymbol{u})\\
+                c(\boldsymbol{v})\leq c(\boldsymbol{u})\\
+            \end{cases}
+        \end{aligned}
+    \end{equation*}
+
+\end{quote}
+\end{document}
