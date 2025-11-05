@@ -453,97 +453,271 @@ Overall, each algorithm’s behaviour changes across problem instances for the P
 
 Conclusion: 
 The GSEMO algorithm is an efficient algorithm for monotone submodular problems with an ability to achieve an optimum with relatively few function evaluations. For the Max Coverage problem, the GSEMO is outperformed by the (1+1) EA and RLS in terms of optimal fitness value but it demonstrates its affinity for fast and effective search space exploration. GSEMO also exhibits its clear superiority at solving dynamic problems when optimising the Max Influence problem. However, for the Pack While Travel problem instances, discrepancies concerning non-monotone submodular problems with varying landscapes were apparent.  
+    \subsubsection*{3. Tradeoff Plots For Each Problem Instance}
+    \textbf{\underline{NOTE:}} We provide two side-by-side plots for each instance to fully characterize the algorithm's output. The plot on the right, showing "positional data," is a standard scatter plot of all non-dominated solutions found. While useful, this view suffers from \textit{overplotting}, where many runs converging to the exact same (cost, fitness) coordinate are hidden and appear as only a single point. \\ \\ 
 
-    \subsection*{3. Trade-off plots (Pareto fronts) of the first run of each problem instance}
+    \noindent 
+    To solve this, the plot on the left visualizes the \textit{solution density}. It uses the size and color of the circles to show how many separate runs converged to that specific point in the objective space. Using both plots is necessary: the \textbf{density plot (left)} reveals the algorithm's most common convergence points (i.e., its typical behavior), while the \textbf{positional plot (right)} is better for showing the full \textit{spread} or extent of the discovered Pareto front, including rare, non-dominated solutions that were only found by a few runs.
      \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2100}
-        \label{fig:ex1plots}
-    \end{figure}
-
-    The trade-off plot for GSEMO on the Max Coverage 2100 instance shows that the algorithm attains high fitness. The densest region of non-dominated solutions is in the upper-right of the plot (9–10 1-bits and fitness around 425), indicating many solutions use a large number of 1-bits. This suggests the algorithm tends to exploit the cost constraint to increase coverage. There is an overall positive trend between bit-count and fitness, fitness generally increases as the number of 1-bits grows up to the observed maximum. However, there are notable exceptions in the 7–8 1-bit region where some lower cost solutions achieve higher fitness than some more expensive solutions. Thus, while GSEMO appears biased toward high bit-counts where ranges near the constraint are more populated, some high-bit solutions still perform poorly and many low-cost solutions can deliver strong coverage. In summary, the Pareto approximation behaves as expected, maximising coverage typically requires more 1-bits, so feasible costly solutions cluster in the upper right.
-
-         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2101}
-        \label{fig:ex1plots}
-    \end{figure}
-The GSEMO performs very well on the Max Coverage 2101 instance. The densest region of solutions is at the highest fitness values. The plot shows a positive relationship between the number of 1-bits and fitness whereas fitness increases, the number of 1-bits generally increases. There is, however, a small region around 7–8 1-bits that performs slightly worse than the neighbouring regions, on average that region still reaches fitness values above around 325. The 9–10 1-bit region contains many tailing solutions that drop below around 325. This pattern suggests GSEMO is biased toward expensive solutions and therefore explores the cheaper region less thoroughly. The most densely populated region is between 400–425 fitness, indicating that costly solutions often pay off with higher fitness. Overall, the result matches expectations, by achieving higher coverage typically requires more 1-bits, so GSEMO tends to search and sample many high-cost solutions in this problem.
-         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2102}
-        \label{fig:ex1plots}
-    \end{figure}
-The GSEMO performs well on the Max Coverage 2102 problem. The densest region is the one with the highest fitness and highest cost, in the top-right of the graph. The plot shows a positive relationship between number of 1-bits and fitness, on average, more 1-bits yield higher fitness. In this problem that relationship is particularly consistent, more costly solutions tend to perform better. The 7–8 1-bit region gives poor results, with most fitness values below 400. By contrast, the 9 1-bit region attains values around 450, while the 10-bit cluster lies roughly in the 450–500 range. If GSEMO is biased toward expensive solutions, that bias is advantageous here because this instance strongly rewards higher cost.Specifically, the 9-bit region is only about 50 fitness points worse than the 10-bit region, whose densest part is around 470. This indicates that the 9-bit region can also yield very good results. Overall, the Pareto approximation for this instance rewards costly solutions, and GSEMO correctly explores these regions and yields good results while avoiding the cheap region that produces poorer fitness. 
- 
-
-
-         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2103}
-        \label{fig:ex1plots}
-    \end{figure}
-
-    The graph shows an interesting inverted triangle shape in objective space. As the number of 1-bits increases, fitness also increases, but only gradually. The solution sets for each bit-count from 6 to 10 become denser and fan outwards. This implies that higher costs tend to be associated with higher fitness values. However, the number of solutions that achieve strictly higher fitness at higher cost is small once we compare with the previous (cheaper) regions. For example, in the 10-bit region, solutions that clearly outperform the 9-bit region appear only after about fitness = 550, below that threshold the 9 and 10 1-bits solutions largely overlap. Thus, for this instance, if GSEMO is biased toward expensive solutions it may struggle to find substantially better solutions, because cheaper solutions are only marginally worse than the more expensive ones. Overall, the fan shape shows an approximately linear increase between number of 1-bits and fitness, the more 1-bits generally give higher fitness, but the improvement is small as you move to higher costs.
-
-         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2200}
-        \label{fig:ex1plots}
-    \end{figure}
-
-    The tradeoff plot for GSEMO shows that the algorithm does not perform well on Max Influence 2200. Many expensive solutions still yield very low fitness and cluster at the left side of the fitness axis. This highlights a weakness of the vanilla GSEMO even with our simple single-bit repair operator. GSEMO struggles in this instance because the weak repair fails to recover feasible, high-quality solutions, so the Pareto set remains dominated by low-fitness points. The trade-off does not show a clear correlation between the number of 1-bits and fitness. Without a stronger repair mechanism, many solutions only start to leave the infeasible region and slowly increase in fitness once they become feasible. Overall, this indicates that GSEMO does not have enough evaluations to escape the low-fitness zone.
-
-
-         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2201}
-        \label{fig:ex1plots}
-    \end{figure}
-
-    GSEMO found no feasible solutions on the Max Influence 2201 instance. Fitness values are more spread out, but there is a dense cluster around 35–40. This pattern indicates that GSEMO is improving objective value while remaining infeasible by attempting to raise fitness under the cost bound of 20. There is little evidence that the algorithm explores the feasible region: solutions with cost 19 still have low fitness around 33 with just a single solution. Overall, GSEMO appears stuck in the infeasible region and has not yet escaped it.
-
-
-         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2202}
-        \label{fig:ex1plots}
-    \end{figure}
-
-    GSEMO on the Max Influence 2202 instance shows interesting behaviour. It is clearly stuck in the infeasible zone. However, GSEMO still discovers high fitness values across different cost regions, and it produces very dense sets of solutions at low fitness values. This suggests the algorithm is attempting to validate itself and escape the infeasible zone, since observed costs are gradually decreasing from 50 down to 48. For instance, at cost 50 the solutions span roughly 130–188 fitness. The high density in the low-fitness infeasible region therefore indicates that GSEMO is trying to correct itself.
-
-
-         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
-        \centering 
-        \includegraphics[width=\linewidth]{folder_ex2/tradeoffs/MC_2100.png}
-        % --- Main Caption ---
-        \caption{GSEMO tradeoff on Max Coverage 2203}
-        \label{fig:ex1plots}
-    \end{figure}
-
-    The plot shows GSEMO’s Pareto which is stuck inside the infeasible zone on MaxInfluence2203. Many solutions concentrate at just two bit-counts (99 and 100), and multiple runs produce nearly identical objective scores at those counts. 99-bit solutions occupy a lower score band (264–276) while 100-bit solutions sit higher (278–286), with only small incremental fitness gains between them. Together these panels indicate that GSEMO repeatedly finds a few nearby points rather than a well-spread Pareto front, the search has low diversity and many near-duplicate solutions. Improving diversity would help the algorithm explore beyond the crowded clusters and possibly find stronger high-quality solutions.
-
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxCoverage2100.png}
+            \caption{Instance 2100}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxCoverage2100.png}
+            \caption{Instance 2100}
+            \label{fig:mc2101}
+        \end{subfigure}
 
     
-    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Coverage.}
+            \label{fig:ex1plots}
+    \end{figure}
 
     
+    \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxCoverage2101.png}
+            \caption{Instance 2101}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxCoverage2101.png}
+            \caption{Instance 2101}
+            \label{fig:mc2101}
+        \end{subfigure}
+
     
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Coverage.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+        \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxCoverage2102.png}
+            \caption{Instance 2102}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxCoverage2102.png}
+            \caption{Instance 2102}
+            \label{fig:mc2101}
+        \end{subfigure}
+
     
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Coverage.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+
+    \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxCoverage2103.png}
+            \caption{Instance 2103}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxCoverage2103.png}
+            \caption{Instance 2103}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Coverage.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxInfluence2200.png}
+            \caption{Instance 2200}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxInfluence2200.png}
+            \caption{Instance 2200}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Influence.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxInfluence2201.png}
+            \caption{Instance 2201}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxCoverage2100.png}
+            \caption{Instance 2201}
+            \label{fig:mc2201}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Influence.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+
+    \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxInfluence2202.png}
+            \caption{Instance 2202}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxInfluence2202.png}
+            \caption{Instance 2202}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Influence.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/MaxInfluence2203.png}
+            \caption{Instance 2203}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_MaxInfluence2203.png}
+            \caption{Instance 2203}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Influence.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+            \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/PackWhileTravel2300.png}
+            \caption{Instance 2300}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_PackWhileTravel2300.png}
+            \caption{Instance 2300}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Pack While Travel.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+            \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/PackWhileTravel2301.png}
+            \caption{Instance 2301}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_PackWhileTravel2301.png}
+            \caption{Instance 2301}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Pack While Travel.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+            \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/PackWhileTravel2302.png}
+            \caption{Instance 2302}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{folder_ex2/GSEMO_ex2_10k/hexbin_filtered_PackWhileTravel2302.png}
+            \caption{Instance 2302}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Pack While Travel.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+
     \section*{\underline{Exercise 3}}
     \subsection*{Single-Objective EA - Design Choices and Process}
     \subsubsection*{Algorithm 1 - \textit{SOP\_EA()}}
@@ -560,11 +734,16 @@ The GSEMO performs well on the Max Coverage 2102 problem. The densest region is 
     \end{quote}
 
     \subsection*{Multi-Objective EA - Design Choices and Process}
-    \paragraph{Design and choices}
-We began from \emph{NSGA-II} as a baseline for Pareto optimization: maximize $f(x)$ and minimize cardinality $\sum_i x_i$ under $\sum_i x_i \le B$ with $B=10$, using bitstrings of length $n$, uniform crossover (random mask), uniform mutation with $p=1/n$, and survival by fast non-dominated sorting with crowding distance; this baseline wastes time on infeasible offspring (evaluate then repair) and re-evaluates duplicates. We therefore adopted a speed-focused variant that keeps the \emph{NSGA-II} selection/survival but reduces wall time: pre-clamp to $B$ before any evaluation; cache evaluations by packed bitstring; use crowded binary tournaments for parent choice to maintain spread with fewer duplicates; and apply a hybrid mutation that is mostly uniform ($p=1/n$) with occasional heavy-tailed $k$-flips ($\beta=1.5$) capped by $k_{\max}=10$ to limit feasibility damage. The resulting method keeps elitist survival ($P\cup Q$ with fronts and crowding), enforces feasibility early, and reuses fitness for recurring solutions. The heavy-tailed component introduces \emph{FastGA}-like rare larger jumps while the rest of the pipeline remains \emph{NSGA-II}.
+%     \paragraph{Design and choices}
+% We began from \emph{NSGA-II} as a baseline for Pareto optimization: maximize $f(x)$ and minimize cardinality $\sum_i x_i$ under $\sum_i x_i \le B$ with $B=10$, using bitstrings of length $n$, uniform crossover (random mask), uniform mutation with $p=1/n$, and survival by fast non-dominated sorting with crowding distance; this baseline wastes time on infeasible offspring (evaluate then repair) and re-evaluates duplicates. We therefore adopted a speed-focused variant that keeps the \emph{NSGA-II} selection/survival but reduces wall time: pre-clamp to $B$ before any evaluation; cache evaluations by packed bitstring; use crowded binary tournaments for parent choice to maintain spread with fewer duplicates; and apply a hybrid mutation that is mostly uniform ($p=1/n$) with occasional heavy-tailed $k$-flips ($\beta=1.5$) capped by $k_{\max}=10$ to limit feasibility damage. The resulting method keeps elitist survival ($P\cup Q$ with fronts and crowding), enforces feasibility early, and reuses fitness for recurring solutions. The heavy-tailed component introduces \emph{FastGA}-like rare larger jumps while the rest of the pipeline remains \emph{NSGA-II}.
 
-\paragraph{Parameters and runtime notes}
-We used $\beta=1.5$, $B=10$, $k_{\max}=10$, with the uniform side defaulting to $p=1/n$. For population $10$: parent\_selection = crowded, mutation\_mode = hybrid, heavy\_mix $=0.10$ (elites-only alternative $K_{\mathrm{Elites}}=5$). For population $20$: crowded, hybrid, $0.15$ (alternative $K_{\mathrm{Elites}}=10$). For population $50$: crowded, hybrid, $0.15$ (alternative $K_{\mathrm{Elites}}=25$). NSGA-II sorting is roughly $\mathcal{O}(\mathrm{pop}^2)$ per iteration, but evaluations dominate runtime; pre-clamping and caching typically cut $25$--$50\%$ evaluation calls relative to evaluate-then-repair. Practical checks: aim for cache-hit rate $\ge 10\%$; if the fraction infeasible before repair exceeds $\sim 30\%$, reduce heavy\_mix or $k_{\max}$; monitor best $f(x)$ vs evaluations to avoid early plateaus and tune accordingly.
+% \paragraph{Parameters and runtime notes}
+% We used $\beta=1.5$, $B=10$, $k_{\max}=10$, with the uniform side defaulting to $p=1/n$. For population $10$: parent\_selection = crowded, mutation\_mode = hybrid, heavy\_mix $=0.10$ (elites-only alternative $K_{\mathrm{Elites}}=5$). For population $20$: crowded, hybrid, $0.15$ (alternative $K_{\mathrm{Elites}}=10$). For population $50$: crowded, hybrid, $0.15$ (alternative $K_{\mathrm{Elites}}=25$). NSGA-II sorting is roughly $\mathcal{O}(\mathrm{pop}^2)$ per iteration, but evaluations dominate runtime; pre-clamping and caching typically cut $25$--$50\%$ evaluation calls relative to evaluate-then-repair. Practical checks: aim for cache-hit rate $\ge 10\%$; if the fraction infeasible before repair exceeds $\sim 30\%$, reduce heavy\_mix or $k_{\max}$; monitor best $f(x)$ vs evaluations to avoid early plateaus and tune accordingly.
+        \paragraph{Design Choices}
+        We optimize two competing objectives on monotone submodular problems (MaxCoverage, MaxInfluence): maximize the problem fitness $f(x)$ and minimize the cardinality $\sum_i x_i$ under the uniform constraint $\sum_i x_i \le B$ with $B=10$. Solutions are $n$-bit strings where ones indicate selected nodes. The algorithm follows the NSGA-II flow: Pareto dominance, fast non-dominated sorting, and crowding distance for diversity within fronts. To handle infeasibility (observed as negative fitness), we apply a repair operator \texttt{\_Repair()} that detects individuals with $f(x)<0$, identifies active bits (ones), and randomly turns off a number of ones proportional to the degree of infeasibility; this reduces constraint violation while preserving positional diversity. Selection and ranking proceed as follows: fast non-dominated sorting (\texttt{\_Sort()}) groups solutions into Pareto fronts by domination; within a front, crowding distance (\texttt{\_CrowdingDist()}) estimates local density to promote spread; for parent choice, we use elitist selection via \texttt{\_EliteNeighbour()} (top performers by fitness) to generate offspring; when comparing individuals for survivor decisions, \texttt{\_CrowdedComparison()} prefers lower-rank solutions, and for ties, larger crowding distance. Variation uses uniform crossover (\texttt{\_UniformCX()}), where a random mask mixes bits from both parents, and two mutation operators: K-bit mutation (\texttt{\_KMutation()}) flips a random number of bits $k$ uniformly from $[1, n/2]$ to inject strong diversity and enable large jumps, and uniform mutation (\texttt{\_UniformMutation()}) flips each bit with a small probability $p$ (default $p=1/n$) to provide fine-grained local search. In our final configuration, we prioritize \texttt{\_KMutation()} due to its stronger exploratory power on these combinatorial domains. Population management follows a generational model with elitism: initialize a random binary population and immediately repair infeasible individuals; select parents from elites; generate offspring via uniform crossover and mutation to form $Q$; merge $P \cup Q$ into $R$, perform non-dominated sorting, then fill the next generation by adding complete fronts until near the size limit and resolving the remaining slots using the highest crowding distances from the last partial front. This maintains both solution quality and diversity.
+        
+        \paragraph{Design process and rationale}
+        We started from the NSGA-II structure (as in lecture pseudocode) because it provides a simple and reliable framework for bi-objective optimization with elitism and diversity maintenance. Early experiments revealed infeasible (negative-fitness) individuals, which motivated the repair step (\texttt{\_Repair()}) to restore feasibility proactively and reduce wasted evaluations. We tested both mutation strategies and chose \texttt{\_KMutation()} as the main operator to encourage larger, structured moves that help escape local optima, while keeping \texttt{\_UniformMutation()} available for refinement. The elitist parent selection (\texttt{\_EliteNeighbour()}) was adopted to accelerate convergence and concentrate reproductive effort on high-quality solutions, while crowding distance preserved spread along the Pareto front. We incrementally refined non-dominated sorting and crowding computations and used AI assistance to fix bugs and clarify the implementation; the final design balances exploration (K-bit mutation, uniform crossover, random removal in repair) and exploitation (elitism, crowding-based survivor selection), producing feasible, diverse, and competitive populations under the budget $B$ and evaluation limits.
 
 
     \subsection*{2. Fixed-Budget Plots and Analysis}
@@ -609,6 +788,56 @@ We used $\beta=1.5$, $B=10$, $k_{\max}=10$, with the uniform side defaulting to 
     \end{figure}
 
     \textbf{Analysis: } We can observe three distinct strategies that converge to the best-found-solution (which we take to be the best result, depending on the problem, since the optimum is not known; and will be used as a relative benchmark to compare with all the others). First off is FastGA. As seen in the plots in exercise 3, there were no instances where its initial solution by FastGA yielded a negative fitness score, please look above for more details. Second off is MOP (which is just NSGA-II with a repair mechanism). It uses a \_Repair() method to combat against infeasible (negative-fitness-scored) solutions and the plot tells us that it was invoked at ~20 evaluations, bumping the fitness from -200 to 400 right away. Finally, and surprisingly, (1+1) - EA, managed to climb its way to the  top with its “naïve” 1/n-hill climbing strategy. Although it did not have a good start, in fact trapped at ~ -200 fitness score for 1000 evaluations, it finished by a strand of hair over both FastGA and MOP, especially once the solution is feasible, the problem becomes a straightforward hill-climb, and (1+1)-EA is one of the most efficient hill-climbers there is. One would wonder how the Max Coverage problems allow for such naïve hill-climbing algorithm such as (1+1)-EA to supplant all other designed algorithms, part of the answer lies in the fact that Max Coverage is a submodular, monotone optimization problem. The fact that it is monotone tells us that once the fitness is positive, its score would just keep climbing, whether fast or slow. However, it is worth noting that RLS, while being a hill-climbing algorithm as well, plateaued at around ~380 fitness score, most likely finding a local optimum where none of its single-bit mutation (flip) could improve the fitness score. Coming to the bottom of the rung, we still have GSEMO and Designed\_GA, one multi-objective with a repair mechanism and another single-objective without one. We can observe that, similar to every other algorithm (except FastGA), GSEMO started off with a negative fitness, but it has a built-in repair mechanism that flips all 1-bits to zeros and check and after each flip, checks whether the flip leads to a better fitness, if not, then it reverts back to the original solution. Although the mechanism helped GSEMO escape into the feasible regions, its approach is naive compared to MOP’s repair mechanism. The main difference is that GSEMO could potentially waste a lot (more than one) of function evaluations every time it flips a bit, but MOP guarantees that at most 1 extra evaluation is required (if it even comes down to that). This is primarily because we know how the IOH’s func() (depending on the problem)  penalizes us if we go above the cost constraint (it gives us back B - cost(x)) so we know exactly how to get it back to a positive score after one evaluation. Designed\_GA flatlined practically all the way through, as it does not even check for infeasible solutions (and contains no repair mechanism). 
+
+    \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering % Center the entire grid
+        % --- Top Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ex3/MI_2200.png}
+            \caption{Instance 2200}
+            \label{fig:mc2100}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ex3/MI_2201.png}
+            \caption{Instance 2201}
+            \label{fig:mc2101}
+        \end{subfigure}
+
+        \vspace{0.5cm} % A little vertical space between rows
+
+        % --- Bottom Row ---
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ex3/MI_2202.png}
+            \caption{Instance 2202}
+            \label{fig:mc2102}
+        \end{subfigure}
+        \hfill % Pushes the two subfigures apart
+        \begin{subfigure}[t]{0.48\textwidth}
+            \centering
+            \includegraphics[width=\linewidth]{ex3/MI_2203.png}
+            \caption{Instance 2203}
+            \label{fig:mc2103}
+        \end{subfigure}
+    
+            % --- Main Caption ---
+            \caption{Fixed budget plots for Max Influence.}
+            \label{fig:ex1plots}
+    \end{figure}
+
+    \textbf{Analysis:} The fixed budget plots for the Max Influence instances reveal a striking and informative reversal in the performance hierarchy, suggesting two distinct types of problem landscapes.
+
+In the first two instances, Figure 16(a) (2200) and 16(b) (2201), the multi-objective algorithms \texttt{NSGAII-20} (light green) and \texttt{NSGAII-hybrid-50} (dark green) are the clear winners. Their \texttt{MultiObjectiveEA} code, which uses \texttt{\_fast\_non\_dominated\_sort} and \texttt{\_crowding\_distance}, preserves population diversity by keeping solutions that are good in *cost*, not just fitness. This diversity is essential for navigating the "rugged" landscape of these instances, preventing them from getting stuck in local optima. The \texttt{Fast-GA} variants (red lines) and \texttt{SOP-EA} variants (blue lines) are a close second. Their efficient constraint handling—a proactive \texttt{initialize\_population} for \texttt{Fast-GA} and a reactive \texttt{\_Repair} using \texttt{abs(fitness)} for \texttt{SOP-EA}—gets them to a good, but not the best, local optimum. The algorithms that fail are \texttt{GSEMO} (yellow) and \texttt{NSGA-II-10K-10} (orange). \texttt{GSEMO} fails because its "naive" repair loop (\texttt{for i... f\_new = func(x\_mut)}) wastes one evaluation per bit flip, while the \texttt{NSGA-II-10K-10} fails because it doesn't appear to repair its initial population, burning its entire budget just trying to become feasible.
+
+However, a performance reversal is seen in the final two instances, Figure 16(c) (2202) and 16(d) (2203). Here, the \texttt{Fast-GA} and \texttt{SOP-EA} algorithms show a massive performance increase, soaring to a new, superior fitness level of \textasciitilde1000. Crucially, the \texttt{NSGAII-20} algorithm's performance is static; it is not worse, but it converges to the same \textasciitilde500-700 fitness level it achieved before.
+
+This shift strongly suggests the landscapes of 2202 and 2203 are different: less "rugged" and more like a single, "steeper hill." This change turns \texttt{NSGAII-20}'s greatest strength into its critical weakness. Its multi-objective search, which was essential for diversity before, now becomes a "distraction," wasting evaluations trying to *minimize cost* instead of aggressively maximizing fitness. The "single-minded" \texttt{Fast-GA} and \texttt{SOP-EA} algorithms are built for this exact scenario. Their aggressive, "large jump" search operators (\texttt{power\_law\_mutate} and \texttt{\_KMutation}) are perfect for this steep hill-climb, allowing them to rocket past the "distracted" \texttt{NSGAII-20}.
+
+The bottom-tier algorithms confirm these theories. In these final instances, \texttt{GSEMO}'s curve is a flat line at -2000, the visual result of its "naive" repair burning its entire 10k budget. In sharp contrast, the \texttt{NSGA-II-10K-10} line does show the vertical "rocket" jump from its smart repair, proving it can become feasible. However, it fails immediately after, confirming its \texttt{pop\_size=10} is too small to conduct a meaningful search, getting stuck on the first plateau it finds.
+
 
 
 
@@ -696,17 +925,145 @@ We used $\beta=1.5$, $B=10$, $k_{\max}=10$, with the uniform side defaulting to 
     \end{figure}
 \textbf{Analysis:}
 The performance trends across all four Max Influence instances (2200-2203) on the 100,000 evaluation budget are clearly stratified and directly explained by each algorithm's constraint-handling code. The \texttt{Designed\_Genetic\_Algorithm} (red line) fails completely, flatlining near -1900. Its code lacks any repair mechanism, so its \texttt{tournament\_select} and \texttt{elitism} applied to a fully infeasible population simply cause it to converge on the "best-of-the-worst" negative solution. The \texttt{GSEMO} (light green line) shows a slow, parabolic climb, wasting most of its budget before plateauing at a very low positive fitness. This plot behavior is a direct visualization of its "naive" repair loop (\texttt{for i in one\_indices: ... f\_new = func(x\_mut)}), which inefficiently spends one evaluation for every single bit it flips. In sharp contrast, the \texttt{SOP\_EA} (blue/teal line) exhibits a vertical "rocket jump" from -2000 to a high positive fitness. This is caused by its "smart" reactive \texttt{\_Repair} function, which uses the \texttt{abs(fitness)} as a heuristic to calculate the \texttt{remove\_k} bits to flip, allowing it to become feasible in a single re-evaluation. Similarly, the \texttt{SingleObjectiveEA} (Fast-GA, yellow line) shows top performance by using a *proactive* strategy: its \texttt{initialize\_population} function is hard-coded to only create solutions with 4-7 '1's, guaranteeing a feasible positive-fitness start from the very first evaluation. Finally, the \texttt{(1+1)\_EA} (pink) and \texttt{Randomized Local Search} (blue) both climb inefficiently from -2000, but \texttt{RLS} plateaus around 40,000 evaluations, trapped in a local optimum its 1-bit flip cannot escape, while the \texttt{(1+1)\_EA}'s \texttt{1/n} (multi-bit) mutation allows it to find a path to a higher fitness.
+    
+    
+    \subsection*{2. Trade-off plots (Pareto fronts) of the first run of each problem instance}
+     \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2100}
+        \label{fig:ex1plots}
+    \end{figure}
 
-     \subsection*{2. Observations on algorithms' performance and improvements}
+    The trade-off plot for GSEMO on the Max Coverage 2100 instance shows that the algorithm attains high fitness. The densest region of non-dominated solutions is in the upper-right of the plot (9–10 1-bits and fitness around 425), indicating many solutions use a large number of 1-bits. This suggests the algorithm tends to exploit the cost constraint to increase coverage. There is an overall positive trend between bit-count and fitness, fitness generally increases as the number of 1-bits grows up to the observed maximum. However, there are notable exceptions in the 7–8 1-bit region where some lower cost solutions achieve higher fitness than some more expensive solutions. Thus, while GSEMO appears biased toward high bit-counts where ranges near the constraint are more populated, some high-bit solutions still perform poorly and many low-cost solutions can deliver strong coverage. In summary, the Pareto approximation behaves as expected, maximising coverage typically requires more 1-bits, so feasible costly solutions cluster in the upper right.
 
-    Comparing the 10,000 and 100,000 evaluation-budget plots reveals three key observations:
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2101}
+        \label{fig:ex1plots}
+    \end{figure}
+The GSEMO performs very well on the Max Coverage 2101 instance. The densest region of solutions is at the highest fitness values. The plot shows a positive relationship between the number of 1-bits and fitness whereas fitness increases, the number of 1-bits generally increases. There is, however, a small region around 7–8 1-bits that performs slightly worse than the neighbouring regions, on average that region still reaches fitness values above around 325. The 9–10 1-bit region contains many tailing solutions that drop below around 325. This pattern suggests GSEMO is biased toward expensive solutions and therefore explores the cheaper region less thoroughly. The most densely populated region is between 400–425 fitness, indicating that costly solutions often pay off with higher fitness. Overall, the result matches expectations, by achieving higher coverage typically requires more 1-bits, so GSEMO tends to search and sample many high-cost solutions in this problem.
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2102}
+        \label{fig:ex1plots}
+    \end{figure}
+The GSEMO performs well on the Max Coverage 2102 problem. The densest region is the one with the highest fitness and highest cost, in the top-right of the graph. The plot shows a positive relationship between number of 1-bits and fitness, on average, more 1-bits yield higher fitness. In this problem that relationship is particularly consistent, more costly solutions tend to perform better. The 7–8 1-bit region gives poor results, with most fitness values below 400. By contrast, the 9 1-bit region attains values around 450, while the 10-bit cluster lies roughly in the 450–500 range. If GSEMO is biased toward expensive solutions, that bias is advantageous here because this instance strongly rewards higher cost.Specifically, the 9-bit region is only about 50 fitness points worse than the 10-bit region, whose densest part is around 470. This indicates that the 9-bit region can also yield very good results. Overall, the Pareto approximation for this instance rewards costly solutions, and GSEMO correctly explores these regions and yields good results while avoiding the cheap region that produces poorer fitness. 
+ 
 
-\begin{enumerate}
-    \item \textbf{Naive Climbers (`(1+1)\_EA`, `RLS`):} The most significant change is that the 100K budget provides enough time for the naive hill-climbers to become viable. At 10,000 evaluations, these algorithms are still deep in the negative-fitness region and appear as complete failures. The extended 100K budget allows them to complete their slow, inefficient climb, eventually reaching a decent-quality local optimum, although they still plateau below the top-tier algorithms.
 
-    \item \textbf{Inefficient/Flawed Algorithms (`GSEMO`, `Designed\_GA`):} For algorithms with fundamentally inefficient (GSEMO) or broken (Designed\_GA) strategies, the extra 90,000 evaluations provide zero improvement. Their performance curves at 100,000 evaluations are identical to their final state at 10,000 evaluations. They get stuck early and never recover, confirming their strategies are ill-suited for these problems.
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2103}
+        \label{fig:ex1plots}
+    \end{figure}
 
-    \item \textbf{Top-Tier Algorithms (`Fast-GA`, `MOP`):} For the top-performing algorithms, which already reached a high-fitness plateau by 10,000 evaluations, the extra budget allows for further, minor refinement. On the 100K plots, these algorithms continue to inch upwards, creating a small but clear performance gap over the other algorithms. This shows that while 10K evaluations are enough to find a good solution, 100K are needed to properly differentiate the very best optimization strategies.
+    The graph shows an interesting inverted triangle shape in objective space. As the number of 1-bits increases, fitness also increases, but only gradually. The solution sets for each bit-count from 6 to 10 become denser and fan outwards. This implies that higher costs tend to be associated with higher fitness values. However, the number of solutions that achieve strictly higher fitness at higher cost is small once we compare with the previous (cheaper) regions. For example, in the 10-bit region, solutions that clearly outperform the 9-bit region appear only after about fitness = 550, below that threshold the 9 and 10 1-bits solutions largely overlap. Thus, for this instance, if GSEMO is biased toward expensive solutions it may struggle to find substantially better solutions, because cheaper solutions are only marginally worse than the more expensive ones. Overall, the fan shape shows an approximately linear increase between number of 1-bits and fitness, the more 1-bits generally give higher fitness, but the improvement is small as you move to higher costs.
+
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2200}
+        \label{fig:ex1plots}
+    \end{figure}
+
+    The tradeoff plot for GSEMO shows that the algorithm does not perform well on Max Influence 2200. Many expensive solutions still yield very low fitness and cluster at the left side of the fitness axis. This highlights a weakness of the vanilla GSEMO even with our simple single-bit repair operator. GSEMO struggles in this instance because the weak repair fails to recover feasible, high-quality solutions, so the Pareto set remains dominated by low-fitness points. The trade-off does not show a clear correlation between the number of 1-bits and fitness. Without a stronger repair mechanism, many solutions only start to leave the infeasible region and slowly increase in fitness once they become feasible. Overall, this indicates that GSEMO does not have enough evaluations to escape the low-fitness zone.
+
+
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2201}
+        \label{fig:ex1plots}
+    \end{figure}
+
+    GSEMO found no feasible solutions on the Max Influence 2201 instance. Fitness values are more spread out, but there is a dense cluster around 35–40. This pattern indicates that GSEMO is improving objective value while remaining infeasible by attempting to raise fitness under the cost bound of 20. There is little evidence that the algorithm explores the feasible region: solutions with cost 19 still have low fitness around 33 with just a single solution. Overall, GSEMO appears stuck in the infeasible region and has not yet escaped it.
+
+
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2202}
+        \label{fig:ex1plots}
+    \end{figure}
+
+    GSEMO on the Max Influence 2202 instance shows interesting behaviour. It is clearly stuck in the infeasible zone. However, GSEMO still discovers high fitness values across different cost regions, and it produces very dense sets of solutions at low fitness values. This suggests the algorithm is attempting to validate itself and escape the infeasible zone, since observed costs are gradually decreasing from 50 down to 48. For instance, at cost 50 the solutions span roughly 130–188 fitness. The high density in the low-fitness infeasible region therefore indicates that GSEMO is trying to correct itself.
+
+
+         \begin{figure}[H] % [H] from 'float' package: "Place Figure HERE"
+        \centering 
+        \includegraphics[width=\linewidth]{ex4/tradeoffs/MC_2100.png}
+        % --- Main Caption ---
+        \caption{GSEMO tradeoff on Max Coverage 2203}
+        \label{fig:ex1plots}
+    \end{figure}
+
+    The plot shows GSEMO’s Pareto which is stuck inside the infeasible zone on MaxInfluence2203. Many solutions concentrate at just two bit-counts (99 and 100), and multiple runs produce nearly identical objective scores at those counts. 99-bit solutions occupy a lower score band (264–276) while 100-bit solutions sit higher (278–286), with only small incremental fitness gains between them. Together these panels indicate that GSEMO repeatedly finds a few nearby points rather than a well-spread Pareto front, the search has low diversity and many near-duplicate solutions. Improving diversity would help the algorithm explore beyond the crowded clusters and possibly find stronger high-quality solutions.
+
+
+    
+    
+
+    
+    
+    
+    
+    
+     \subsection*{3. Observations on algorithms' performance and improvements}
+
+%     Comparing the 10,000 and 100,000 evaluation-budget plots reveals three key observations:
+
+% \begin{enumerate}
+%     \item \textbf{Naive Climbers (`(1+1)\_EA`, `RLS`):} The most significant change is that the 100K budget provides enough time for the naive hill-climbers to become viable. At 10,000 evaluations, these algorithms are still deep in the negative-fitness region and \textit{appear} as complete failures. The extended 100K budget allows them to complete their slow, inefficient climb, eventually reaching a decent-quality local optimum, although they still plateau below the top-tier algorithms.
+
+%     \item \textbf{Inefficient/Flawed Algorithms (`GSEMO`, `Designed\_GA`):} For algorithms with fundamentally inefficient (GSEMO) or broken (Designed\_GA) strategies, the extra 90,000 evaluations provide zero improvement. Their performance curves at 100,000 evaluations are identical to their final state at 10,000 evaluations. They get stuck early and never recover, confirming their strategies are ill-suited for these problems.
+
+%     \item \textbf{Top-Tier Algorithms (`Fast-GA`, `MOP`):} For the top-performing algorithms, which already reached a high-fitness plateau by 10,000 evaluations, the extra budget allows for further, minor refinement. On the 100K plots, these algorithms continue to inch upwards, creating a small but clear performance gap over the other algorithms. This shows that while 10K evaluations are enough to find a good solution, 100K are needed to properly differentiate the very best optimization strategies.
+% \end{enumerate}
+
+A detailed comparison of the 10,000 (Ex 3) and 100,000 (Ex 4) evaluation-budget plots reveals the critical impact of two main factors:
+1. \textbf{The Repair Mechanism:} How an algorithm handles infeasible (negative fitness) solutions.
+2. \textbf{The Problem Structure:} The landscape is \textbf{monotone} (once feasible, adding elements generally helps) and \textbf{submodular} (the "hill" has diminishing returns and many plateaus).
+
+The extra 90,000 evaluations are a test of which algorithms can overcome these challenges.
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Top-Tier (Efficient Strategies): \texttt{Fast-GA} \& \texttt{MOP}/\texttt{SOP\_EA}}
+    \begin{itemize}
+        \item \textbf{Repair Mechanism:} These algorithms are top-tier \textit{because} of their efficient constraint handling. \texttt{Fast-GA} (red lines in 10K, yellow in 100K) uses a \textit{proactive} strategy: its \texttt{initialize\_population} function starts it in the feasible (positive) zone. \texttt{MOP}/\texttt{SOP\_EA} (blue lines in 10K, teal in 100K) use a "smart" \textit{reactive} strategy: their \texttt{\_Repair} function uses the \texttt{abs(fitness)} value as a heuristic to calculate \textit{exactly} how many bits to flip, making it feasible in a single extra evaluation (this is the "rocket jump" you see).
+        \item \textbf{Performance \& Improvements:} At 10,000 evaluations, they appear to have fully converged, settling on a high-fitness plateau (e.g., \textasciitilde{}410 on MC 2100). The 100K plots show this was a \textbf{"false plateau."} The extra 90,000 evaluations are \textbf{not} wasted. They are spent slowly "grinding" past the submodular diminishing returns, allowing them to find marginally better solutions (e.g., climbing from \textasciitilde{}410 to \textasciitilde{}425 on MC 2100). On harder instances (like MI 2203), the extra budget is clearly necessary, as they are still in their main climbing phase well past 10,000 evaluations, pushing from \textasciitilde{}700 to over 1000.
+    \end{itemize}
+
+    \item \textbf{Naive Climbers (No Repair): \texttt{(1+1)\_EA} \& \texttt{RLS}}
+    \begin{itemize}
+        \item \textbf{Repair Mechanism:} None. This is their critical flaw.
+        \item \textbf{Performance \& Improvements:} At 10,000 evaluations, these algorithms would be total failures. The 100K plots confirm this: at the 10,000-evaluation mark, they are still deep in the negative-fitness region (e.g., at -1000 on MI 2203). The extra 90,000 evaluations are almost \textit{entirely} spent just becoming feasible.
+        \item \textbf{Why they perform well \textit{after} becoming feasible:} This is a key insight. Once they are in the positive (feasible) region, the problem's \textbf{monotone} nature means the search space is a relatively simple "hill." Both \texttt{(1+1)\_EA} and \texttt{RLS} are excellent hill-climbers, so they climb this hill rapidly. The problem's \textbf{submodular} nature creates local optima on this hill, which is why \texttt{RLS} (pink line) often gets stuck and plateaus earlier. \texttt{(1+1)\_EA} (blue line) often overtakes it because its \texttt{1/n} (multi-bit) mutation is more powerful, allowing it to "jump" over the plateaus that trap RLS's 1-bit flip.
+    \end{itemize}
+
+    \item \textbf{Inefficient \& Failed Strategies: \texttt{GSEMO} \& \texttt{Designed\_GA}}
+    \begin{itemize}
+        \item \textbf{\texttt{GSEMO} (Inefficient Repair):}
+            \begin{itemize}
+                \item \textbf{Repair Mechanism:} Its \texttt{\_Repair} loop is "naive," costing one evaluation for \textit{every single bit flip}. This is its bottleneck.
+                \item \textbf{Performance \& Improvements:} At 10K, this naive repair wastes its budget, leaving it on a \textit{low-quality} plateau (e.g., \textasciitilde{}310 on MC 2100) or still in the negative (on MI). The extra 90,000 evaluations \textit{are} used: on Max Coverage, it slowly escapes this first plateau to find a better one (climbing from \textasciitilde{}310 to \textasciitilde{}380 on MC 2100). On Max Influence, it uses the extra budget to finally \textit{finish} its costly climb to feasibility, only to get permanently stuck on the very first positive plateau it finds.
+            \end{itemize}
+        \item \textbf{\texttt{Designed\_GA} (No Repair / Failed Strategy):}
+            \begin{itemize}
+                \item \textbf{Repair Mechanism:} None.
+                \item \textbf{Performance \& Improvements:} At 10K, its plot would be a flat line near -1900. At 100K, it is the \textit{exact same} flat line. The extra 90,000 evaluations achieve absolutely nothing, confirming its strategy of applying elitism to a fully infeasible population is fundamentally broken.
+            \end{itemize}
+    \end{itemize}
 \end{enumerate}
 \end{document}
     
