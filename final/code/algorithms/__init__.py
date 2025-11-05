@@ -1,13 +1,9 @@
 from .algorithm_interface import Algorithm
 from .OnePlusOneEA import OnePlusOneEA
 from .RLS import RandomizedLocalSearch
-from .RandomSearch import RandomSearch
 from .DesignedGA import DesignedGA
 
 
-# Testing exercise 2 algorithms
-from .GSEMO_Seth import GSEMO_Seth
-from .GSEMO_Tatiana import GSEMO
 
 # for exercise 3 and 4
 from .SingleObjectiveEA import SingleObjectiveEA
